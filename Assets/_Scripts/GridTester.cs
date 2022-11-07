@@ -19,7 +19,7 @@ public class GridTester : MonoBehaviour
     public void printCoords()
     {
         GameObject debugGrid = new GameObject("debug grid");
-        debugTestArray = new TextMesh[6, 6];
+        debugTestArray = new TextMesh[width, height];
         for (int x = 0; x < gridArray.GetWitdth(); x++)
         {
             for (int y = 0; y < gridArray.GetHeight(); y++)
@@ -40,6 +40,11 @@ public class GridTester : MonoBehaviour
         Debug.DrawLine(gridArray.GetWorldPosition(width, 0), gridArray.GetWorldPosition(width, height), Color.black, 100f);
     }
 
+
+    private void SetDebugText(int x, int y ,TextMesh value)
+    {
+        debugTestArray[x, y] = value;
+    }
 
     #region UTILS
 
