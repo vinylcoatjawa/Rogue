@@ -7,7 +7,7 @@ public class GridTester : MonoBehaviour
     int width = 6;
     int height = 6;
 
-    Grid gridArray = new(6, 6, 10f, Vector3.zero);
+    Grid gridArray = new(6, 6, 10f, Vector3.zero, );
     TextMesh[,] debugTestArray;
 
     void Start()

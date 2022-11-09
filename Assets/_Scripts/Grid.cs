@@ -6,31 +6,45 @@ namespace Mapgrid
     /// <summary>
     /// Grid class holding custom grid object
     /// </summary>
-    public class Grid
+    public class Grid<TGridObject>
     {
         private int width;
         private int height;
         private float cellSize;
         private Vector3 originPosition;
-        private int[,] gridArray;
+        private TGridObject[,] gridArray;
 
-        public static event Action<int, int, int> GridObjectSet; 
+        public static event Action<int, int, int> GridObjectSet;
 
         /// <summary>
         /// Grid constructor
         /// </summary>
         /// <param name="width">Number of columns in the grid</param>
         /// <param name="height"> Number of rows in the grid</param>
-        /// <param name="cellsize">Sizelength of the quadratic gridpositions</param>
+        /// <param name="cellSize">Sizelength of the quadratic gridpositions</param>
         /// <param name="originPosition">Coordinates of the bottom-leftmost gridcells position</param>
-        public Grid(int width, int height, float cellsize, Vector3 originPosition)
+        /// <param name="createGridObject">Default grid object</param>
+        public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<TGridObject> createGridObject)
         {
             this.width = width;
             this.height = height;
-            this.cellSize = cellsize;
+            this.cellSize = cellSize;
             this.originPosition = originPosition;
 
-            gridArray = new int[width, height];
+
+            Vector3 middleOffset = new Vector3(cellSize, cellSize, 0) * 0.5f;
+
+            /* initializing array with default objects */
+            gridArray = new TGridObject[width, height];
+            for (int x = 0; x < gridArray.GetLength(0); x++)
+            {
+                for (int y = 0; y < gridArray.GetLength(1); y++)
+                {
+                    gridArray[x, y] = createGridObject();
+                }
+            }
+
+            
 
 
 
@@ -76,7 +90,7 @@ namespace Mapgrid
         /// <param name="x">X coord of the cell</param>
         /// <param name="y">Y coord of the cell</param>
         /// <param name="value">The value to be set</param>
-        public void SetGridObject(int x, int y, int value) // setting object on grid position
+        public void SetGridObject(int x, int y, TGridObject value) // setting object on grid position
         {
             if (x >= 0 && y >= 0 && x < width && y < height)
             {
