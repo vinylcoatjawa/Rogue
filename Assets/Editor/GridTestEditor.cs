@@ -14,7 +14,15 @@ public class GridTestEditor : Editor
         if (GUILayout.Button("Start"))
         {
             //Debug.Log("hej");
-            gridTester.printCoords();
+            gridTester.DrawGrid();
+
         }
+        if (GUILayout.Button("Sst"))
+        {
+            //Debug.Log("hej");
+            gridTester.SetValue();
+
+        }
+
     }
 }
