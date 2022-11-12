@@ -3,8 +3,8 @@ using UnityEngine;
 public class GridTester : MonoBehaviour
 {
 
-    int width = 6;
-    int height = 6;
+    int _width = 6;
+    int _height = 6;
 
     Grid<int> gridArray;
 
@@ -16,7 +16,7 @@ public class GridTester : MonoBehaviour
     }
     public void DrawGrid()
     {
-        gridArray = new Grid<int>(width, height, 10f, Vector3.zero, () => 0);
+        gridArray = new Grid<int>(_width, _height, 10f, Vector3.zero, () => 0);
     }
 
     public void SetValue()

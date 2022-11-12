@@ -6,15 +6,15 @@ using UnityEngine;
     /// </summary>
     public class Grid<TGridObject>
     {
-        private int width;
-        private int height;
-        private float cellSize;
-        private Vector3 originPosition;
-        private TGridObject[,] gridArray;
-        TextMesh[,] debugTestArray;
+        private int _width;
+        private int _height;
+        private float _cellSize;
+        private Vector3 _originPosition;
+        private TGridObject[,] _gridArray;
+        TextMesh[,] _debugTestArray;
 
 
-        public bool allowDebug = true;
+        public bool AllowDebug = true;
 
         
 
@@ -28,34 +28,34 @@ using UnityEngine;
         /// <param name="createGridObject">Default grid object</param>
         public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<TGridObject> createGridObject)
         {
-            this.width = width;
-            this.height = height;
-            this.cellSize = cellSize;
-            this.originPosition = originPosition;
+            this._width = width;
+            this._height = height;
+            this._cellSize = cellSize;
+            this._originPosition = originPosition;
 
 
             Vector3 middleOffset = new Vector3(cellSize, cellSize, 0) * 0.5f;
 
             /* initializing array with default objects */
-            gridArray = new TGridObject[width, height];
-            for (int x = 0; x < gridArray.GetLength(0); x++)
+            _gridArray = new TGridObject[width, height];
+            for (int x = 0; x < _gridArray.GetLength(0); x++)
             {
-                for (int y = 0; y < gridArray.GetLength(1); y++)
+                for (int y = 0; y < _gridArray.GetLength(1); y++)
                 {
-                    gridArray[x, y] = createGridObject();
+                    _gridArray[x, y] = createGridObject();
                 }
             }
-            debugTestArray = new TextMesh[width, height];
+            _debugTestArray = new TextMesh[width, height];
             # region DEBUGARRAY
-            if (allowDebug)
+            if (AllowDebug)
             {
                 GameObject debugGrid = new GameObject("debug grid");
-                for (int x = 0; x < gridArray.GetLength(0); x++)
+                for (int x = 0; x < _gridArray.GetLength(0); x++)
                 {
-                    for (int y = 0; y < gridArray.GetLength(1); y++)
+                    for (int y = 0; y < _gridArray.GetLength(1); y++)
                     {
-                        debugTestArray[x, y] = CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + middleOffset, 20, Color.black, TextAnchor.MiddleCenter);
-                        debugTestArray[x, y].gameObject.transform.SetParent(debugGrid.transform);
+                        _debugTestArray[x, y] = CreateWorldText(_gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + middleOffset, 20, Color.black, TextAnchor.MiddleCenter);
+                        _debugTestArray[x, y].gameObject.transform.SetParent(debugGrid.transform);
 
                         Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.black, 100f);
                         Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.black, 100f);
@@ -77,7 +77,7 @@ using UnityEngine;
         /// <returns>Number of columns</returns>
         public int GetWitdth()
         {
-            return gridArray.GetLength(0);
+            return _gridArray.GetLength(0);
         }
         /// <summary>
         /// Returns the number of rows in the grid aka the 'y' value 
@@ -85,7 +85,7 @@ using UnityEngine;
         /// <returns>Number of rows</returns>
         public int GetHeight()
         {
-            return gridArray.GetLength(1);
+            return _gridArray.GetLength(1);
         }
         /// <summary>
         /// Returns the 2D gridcells position in the 3D worldspace
@@ -95,7 +95,7 @@ using UnityEngine;
         /// <returns></returns>
         public Vector3 GetWorldPosition(int x, int y) // convert from grid space to world space
         {
-            return new Vector3(x, y, 0) * cellSize + originPosition;
+            return new Vector3(x, y, 0) * _cellSize + _originPosition;
         }
         /// <summary>
         /// Returns the cellsize of the grid
@@ -103,7 +103,7 @@ using UnityEngine;
         /// <returns>Cellsize as float</returns>
         public float GetCellsize()
         {
-            return cellSize;
+            return _cellSize;
         }
         /// <summary>
         /// Sets the object stored on the grid position
@@ -113,10 +113,10 @@ using UnityEngine;
         /// <param name="value">The value to be set</param>
         public void SetGridObject(int x, int y, TGridObject value) // setting object on grid position
         {
-            if (x >= 0 && y >= 0 && x < width && y < height)
+            if (x >= 0 && y >= 0 && x < _width && y < _height)
             {
-                gridArray[x, y] = value;
-                if (allowDebug) debugTestArray[x, y].text = gridArray[x, y]?.ToString();
+                _gridArray[x, y] = value;
+                if (AllowDebug) _debugTestArray[x, y].text = _gridArray[x, y]?.ToString();
             }
         }
         /// <summary>
@@ -127,9 +127,9 @@ using UnityEngine;
         /// <returns></returns>
         public TGridObject GetGridObject(int x, int y)
         {
-            if (x >= 0 && y >= 0 && x < width && y < height)
+            if (x >= 0 && y >= 0 && x < _width && y < _height)
             {
-                return gridArray[x, y];
+                return _gridArray[x, y];
             }
             else
             {
@@ -144,8 +144,8 @@ using UnityEngine;
         /// <param name="y"></param>
         public void GetXY(Vector3 worldPosition, out int x, out int y) // convert from world space to grid space
         {
-            x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
-            y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);
+            x = Mathf.FloorToInt((worldPosition - _originPosition).x / _cellSize);
+            y = Mathf.FloorToInt((worldPosition - _originPosition).y / _cellSize);
         }
         /// <summary>
         /// Setting grid object using world space coordinates
@@ -167,7 +167,7 @@ using UnityEngine;
         {
             int x, y;
             GetXY(worldPosition, out x, out y);
-            if (x >= 0 && y >= 0 && x < width && y < height)
+            if (x >= 0 && y >= 0 && x < _width && y < _height)
             {
                 return GetGridObject(x, y);
             }

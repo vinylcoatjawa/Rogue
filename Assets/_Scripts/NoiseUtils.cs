@@ -10,13 +10,13 @@ namespace NoiseUtils
     /// </summary>
     public class Noise
     {
-        //const uint noise1 = 0b11010111010101010010011111101011;
-        //const uint noise2 = 0b11101101101010101100000101101101;
-        //const uint noise3 = 0b11000101010100111101000110001011;
-        const uint noise1 = 0xB5297A4D;
-        const uint noise2 = 0x68E31DA4;
-        const uint noise3 = 0x1B56C4E9;
-        const uint prime = 0b11101110011010110010101101011101;
+        //const uint _noise1 = 0b11010111010101010010011111101011;
+        //const uint _noise2 = 0b11101101101010101100000101101101;
+        //const uint _noise3 = 0b11000101010100111101000110001011;
+        const uint _noise1 = 0xB5297A4D;
+        const uint _noise2 = 0x68E31DA4;
+        const uint _noise3 = 0x1B56C4E9;
+        const uint _prime = 0b11101110011010110010101101011101;
 
         /****************         1D          ***********************/
 
@@ -29,12 +29,12 @@ namespace NoiseUtils
         public uint Get1DNoiseUint(uint position, uint seed)
         {
             uint mangled = position;
-            mangled *= noise1;
+            mangled *= _noise1;
             mangled += seed;
             mangled ^= (mangled << 8);
-            mangled += noise2;
+            mangled += _noise2;
             mangled ^= (mangled >> 8);
-            mangled *= noise3;
+            mangled *= _noise3;
             mangled ^= (mangled << 8);
 
             return mangled;
@@ -61,12 +61,12 @@ namespace NoiseUtils
         public float Get1DNoiseZeroToOne(uint position, uint seed)
         {
             uint mangled = position;
-            mangled *= noise1;
+            mangled *= _noise1;
             mangled += seed;
             mangled ^= (mangled << 8);
-            mangled += noise2;
+            mangled += _noise2;
             mangled ^= (mangled >> 8);
-            mangled *= noise3;
+            mangled *= _noise3;
             mangled ^= (mangled << 8);
 
             return (float)mangled / uint.MaxValue;
@@ -80,12 +80,12 @@ namespace NoiseUtils
         public uint ZeroOrOne(uint position, uint seed)
         {
             uint mangled = position;
-            mangled *= noise1;
+            mangled *= _noise1;
             mangled += seed;
             mangled ^= (mangled << 8);
-            mangled += noise2;
+            mangled += _noise2;
             mangled ^= (mangled >> 8);
-            mangled *= noise3;
+            mangled *= _noise3;
             mangled ^= (mangled << 8);
 
             return (uint)Mathf.RoundToInt((float)mangled / uint.MaxValue);
@@ -99,12 +99,12 @@ namespace NoiseUtils
         public int ZeroOrOneOrMinusOne(uint position, uint seed)
         {
             uint mangled = position;
-            mangled *= noise1;
+            mangled *= _noise1;
             mangled += seed;
             mangled ^= (mangled << 8);
-            mangled += noise2;
+            mangled += _noise2;
             mangled ^= (mangled >> 8);
-            mangled *= noise3;
+            mangled *= _noise3;
             mangled ^= (mangled << 8);
 
             return (int)(mangled % 3) - 1;
@@ -121,7 +121,7 @@ namespace NoiseUtils
         /// <returns>A random uint based on 2D coordinates</returns>
         public uint Get2DNoiseUint(uint posX, uint posY, uint seed)
         {
-            return Get1DNoiseUint(posX + (prime * posY), seed);
+            return Get1DNoiseUint(posX + (_prime * posY), seed);
         }
         /// <summary>
         /// Gets a float between 0 and 1 based on the noise functions value on a specified 2D coordinate, shifted by a seed
@@ -132,7 +132,7 @@ namespace NoiseUtils
         /// <returns></returns>
         public float Get2DNoiseZeroToOne(uint posX, uint posY, uint seed)
         {
-            return Get1DNoiseZeroToOne(posX + (prime * posY), seed);
+            return Get1DNoiseZeroToOne(posX + (_prime * posY), seed);
         }
     }
 }
