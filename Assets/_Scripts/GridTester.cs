@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GridTester : MonoBehaviour
 {
 
-    int _width = 6;
-    int _height = 6;
+    int _width = 25;
+    int _height = 25;
 
     Grid<int> gridArray;
 
@@ -24,5 +25,12 @@ public class GridTester : MonoBehaviour
         gridArray.SetGridObject(2, 2, 5);
     }
 
+    public void GetPMap()
+    {
+        PerlinMap.GenerateNoiseMap(_width, _height, 10, 3, 0.5f, 0.5f, 123, new Vector2(2, 5));
+        Debug.Log("PM");
+
+
+    }
 
 }

@@ -13,16 +13,18 @@ public class GridTestEditor : Editor
 
         if (GUILayout.Button("Start"))
         {
-            //Debug.Log("hej");
             gridTester.DrawGrid();
 
         }
-        if (GUILayout.Button("Sst"))
+        if (GUILayout.Button("Set"))
         {
-            //Debug.Log("hej");
             gridTester.SetValue();
 
         }
+        if (GUILayout.Button("PM"))
+        {
+            gridTester.GetPMap();
 
+        }
     }
 }

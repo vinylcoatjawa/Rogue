@@ -14,7 +14,7 @@ using UnityEngine;
         TextMesh[,] _debugTestArray;
 
 
-        public bool AllowDebug = true;
+        public bool AllowDebug = false;
 
         
 

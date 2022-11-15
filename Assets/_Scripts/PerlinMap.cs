@@ -4,7 +4,7 @@ using NoiseUtils;
 public class PerlinMap : MonoBehaviour
 {
     /// <summary>
-    /// Generates a Perlin noise based map on a 2D grid
+    /// Generates a Perlin noise based map on a 2D grid with float values from 0 to 1
     /// </summary>
     /// <param name="mapWidth">The width of the map</param>
     /// <param name="mapHeight">The height of the map</param>
@@ -14,8 +14,8 @@ public class PerlinMap : MonoBehaviour
     /// <param name="lacunarity">Controls the frequency of each octave should be greater than 1</param>
     /// <param name="seed"></param>
     /// <param name="offset"></param>
-    /// <returns></returns>
-    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float scale, int octaves, float persistence, float lacunarity, uint seed, Vector2 offset)
+    /// <returns>A grid of floats based on Perlin noise</returns>
+    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset)
     {
         Grid<float> noiseMap = new Grid<float>(mapWidth, mapHeight, 10, Vector3.zero, () => 0f);
         Noise noise = new Noise();
@@ -53,10 +53,11 @@ public class PerlinMap : MonoBehaviour
                     float sampleX = (x - halfWidth) / scale * frequency + octaveOffsets[octave].x;
                     float sampleY = (y - halfWidth) / scale * frequency + octaveOffsets[octave].y;
 
-                    float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1; //making perlinValue to go from -1 to 1
-                    noiseHeight += perlinValue + amplitude; 
-                    
+                    float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1; // making perlinValue to go from -1 to 1
+                    noiseHeight += perlinValue + amplitude;
 
+                    amplitude *= persistance;
+                    frequency *= lacunarity;
                 }
 
                 if (noiseHeight > maxNoiseHeight) { maxNoiseHeight = noiseHeight; }
@@ -79,8 +80,6 @@ public class PerlinMap : MonoBehaviour
                 noiseMap.SetGridObject(x, y, Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap.GetGridObject(x, y)));
             }
         }
-
-
         return noiseMap;
     }
 
