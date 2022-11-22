@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class OverWorldMapDisplay : MonoBehaviour
 {
-    Renderer textureRenderer;
+    
+    public enum DrawMode { NoiseMap, ColourMap };
 
     public bool AutoUpdate;
-
+    public TerrainType[] Regions;
     public int Height;
     public int Width;
     public float Scale;
@@ -19,6 +20,7 @@ public class OverWorldMapDisplay : MonoBehaviour
     public int OffsetX;
     public int OffsetY;
 
+    Renderer textureRenderer;
     Grid<float> _noiseMap;
 
 
@@ -34,7 +36,7 @@ public class OverWorldMapDisplay : MonoBehaviour
         
         textureRenderer = GetComponent<Renderer>();
 
-        Texture2D texture = new Texture2D(Width, Height);
+        /*Texture2D texture = new Texture2D(Width, Height);
 
         Color[] colourMap = new Color[Width * Height];
         for (int y = 0; y < Height; y++)
@@ -45,10 +47,32 @@ public class OverWorldMapDisplay : MonoBehaviour
             }
         }
         texture.SetPixels(colourMap);
-        texture.Apply();
+        texture.Apply();*/
 
-        textureRenderer.sharedMaterial.mainTexture = texture;
+        textureRenderer.sharedMaterial.mainTexture = MapTextureGenerator.TextureFromHeightMap(noiseMap);
         textureRenderer.transform.localScale = new Vector3(Width, 1, Height);
+    }
+
+    public void DrawTexture()
+    {
+        textureRenderer = GetComponent<Renderer>();
+
+        Texture2D texture = MapTextureGenerator.TextureFromHeightMap(GenerateNoiseMap());
+        textureRenderer.sharedMaterial.mainTexture = texture;
+        textureRenderer.transform.localScale = new Vector3(texture.width, 1, texture.height);
+    }
+
+    public void DisplayMap()
+    {
+        DrawNoiseMap(GenerateNoiseMap());
+    }
+
+    [System.Serializable]
+    public struct TerrainType
+    {
+        public string name;
+        public float height;
+        public Color colour;
     }
 
     private void OnValidate()
