@@ -21,11 +21,11 @@ namespace NoiseUtils
         /****************         1D          ***********************/
 
         /// <summary>
-        /// Get the noise functions value on a specified place, shifted by a seed
+        /// Get the noise functions value on a specified place, shifted by a Seed
         /// </summary>
         /// <param name="position">The input of the noise generator</param>
         /// <param name="seed">Seed parameter of the random generator</param>
-        /// <returns>A random uint based on the position and the seed</returns>
+        /// <returns>A random uint based on the position and the Seed</returns>
         public uint Get1DNoiseUint(uint position, uint seed)
         {
             uint mangled = position;
@@ -40,7 +40,7 @@ namespace NoiseUtils
             return mangled;
         }
         /// <summary>
-        /// Get the noise functions value on a specified place, shifted by a seed then mods it so it ends up in a range
+        /// Get the noise functions value on a specified place, shifted by a Seed then mods it so it ends up in a range
         /// </summary>
         /// <param name="rangeFrom"></param>
         /// <param name="rangeTo"></param>
@@ -53,7 +53,7 @@ namespace NoiseUtils
             return rangeFrom + mangled % (rangeTo - rangeFrom);
         }
         /// <summary>
-        /// Gets a float between 0 and 1 based on the noise functions value on a specified place, shifted by a seed 
+        /// Gets a float between 0 and 1 based on the noise functions value on a specified place, shifted by a Seed 
         /// </summary>
         /// <param name="position"></param>
         /// <param name="seed"></param>
@@ -72,7 +72,7 @@ namespace NoiseUtils
             return (float)mangled / uint.MaxValue;
         }
         /// <summary>
-        /// Get the noise functions value on a specified place, shifted by a seed modded by two
+        /// Get the noise functions value on a specified place, shifted by a Seed modded by two
         /// </summary>
         /// <param name="position"></param>
         /// <param name="seed"></param>
@@ -91,7 +91,7 @@ namespace NoiseUtils
             return (uint)Mathf.RoundToInt((float)mangled / uint.MaxValue);
         }
         /// <summary>
-        /// Get the noise functions value on a specified place, shifted by a seed modded by 3
+        /// Get the noise functions value on a specified place, shifted by a Seed modded by 3
         /// </summary>
         /// <param name="position"></param>
         /// <param name="seed"></param>
@@ -113,7 +113,7 @@ namespace NoiseUtils
 
         /****************        2D              **************************/
         /// <summary>
-        /// Get the noise functions value on a specified 2D coordinate, shifted by a seed modded by two
+        /// Get the noise functions value on a specified 2D coordinate, shifted by a Seed modded by two
         /// </summary>
         /// <param name="posX"></param>
         /// <param name="posY"></param>
@@ -124,7 +124,7 @@ namespace NoiseUtils
             return Get1DNoiseUint(posX + (_prime * posY), seed);
         }
         /// <summary>
-        /// Gets a float between 0 and 1 based on the noise functions value on a specified 2D coordinate, shifted by a seed
+        /// Gets a float between 0 and 1 based on the noise functions value on a specified 2D coordinate, shifted by a Seed
         /// </summary>
         /// <param name="posX"></param>
         /// <param name="posY"></param>

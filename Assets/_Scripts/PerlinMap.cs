@@ -6,18 +6,18 @@ public class PerlinMap : MonoBehaviour
     /// <summary>
     /// Generates a Perlin noise based map on a 2D grid with float values from 0 to 1
     /// </summary>
-    /// <param name="mapWidth">The width of the map</param>
-    /// <param name="mapHeight">The height of the map</param>
-    /// <param name="scale">The scale/zoom</param>
+    /// <param name="mapWidth">The Width of the map</param>
+    /// <param name="mapHeight">The Height of the map</param>
+    /// <param name="scale">The Scale/zoom</param>
     /// <param name="octaves">The number of layers of noise to be added together</param>
-    /// <param name="persistence">Controls the amplitude of each octave</param>
+    /// <param name="persistance">Controls the amplitude of each octave</param>
     /// <param name="lacunarity">Controls the frequency of each octave should be greater than 1</param>
     /// <param name="seed"></param>
     /// <param name="offset"></param>
     /// <returns>A grid of floats based on Perlin noise</returns>
-    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset)
+    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset, bool allowDebug = false)
     {
-        Grid<float> noiseMap = new Grid<float>(mapWidth, mapHeight, 10, Vector3.zero, () => 0f);
+        Grid<float> noiseMap = new Grid<float>(mapWidth, mapHeight, 10, Vector3.zero, () => 0f, allowDebug);
         Noise noise = new Noise();
 
         Vector2[] octaveOffsets = new Vector2[octaves];
@@ -36,7 +36,7 @@ public class PerlinMap : MonoBehaviour
         float maxNoiseHeight = float.MinValue; 
         float minNoiseHeight = float.MaxValue;
 
-        // these are used to make the scale change zoom in on the middle of the map
+        // these are used to make the Scale change zoom in on the middle of the map
         float halfWidth = mapWidth / 2f;
         float halfHeight = mapHeight / 2f;
 
@@ -54,7 +54,7 @@ public class PerlinMap : MonoBehaviour
                     float sampleY = (y - halfWidth) / scale * frequency + octaveOffsets[octave].y;
 
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1; // making perlinValue to go from -1 to 1
-                    noiseHeight += perlinValue + amplitude;
+                    noiseHeight += perlinValue * amplitude;
 
                     amplitude *= persistance;
                     frequency *= lacunarity;
@@ -67,12 +67,11 @@ public class PerlinMap : MonoBehaviour
 
 
 
-
+                
 
             }
         }
-
-        // we scale back the noise map to have values only between 0 and 1
+        // we Scale back the noise map to have values only between 0 and 1
         for (int x = 0; x < mapWidth; x++)
         {
             for (int y = 0; y < mapHeight; y++)

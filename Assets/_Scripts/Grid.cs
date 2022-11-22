@@ -12,10 +12,6 @@ using UnityEngine;
         private Vector3 _originPosition;
         private TGridObject[,] _gridArray;
         TextMesh[,] _debugTestArray;
-
-
-        public bool AllowDebug = false;
-
         
 
         /// <summary>
@@ -25,8 +21,8 @@ using UnityEngine;
         /// <param name="height"> Number of rows in the grid</param>
         /// <param name="cellSize">Sizelength of the quadratic gridpositions</param>
         /// <param name="originPosition">Coordinates of the bottom-leftmost gridcells position</param>
-        /// <param name="createGridObject">Default grid object</param>
-        public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<TGridObject> createGridObject)
+        /// <param name="createGridObject">Default grid object needed to initialize the Grid</param>
+        public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<TGridObject> createGridObject, bool allowDebug)
         {
             this._width = width;
             this._height = height;
@@ -47,7 +43,7 @@ using UnityEngine;
             }
             _debugTestArray = new TextMesh[width, height];
             # region DEBUGARRAY
-            if (AllowDebug)
+            if (allowDebug)
             {
                 GameObject debugGrid = new GameObject("debug grid");
                 for (int x = 0; x < _gridArray.GetLength(0); x++)
@@ -116,7 +112,8 @@ using UnityEngine;
             if (x >= 0 && y >= 0 && x < _width && y < _height)
             {
                 _gridArray[x, y] = value;
-                if (AllowDebug) _debugTestArray[x, y].text = _gridArray[x, y]?.ToString();
+                if (_debugTestArray[0,0] != null) { _debugTestArray[x, y].text = _gridArray[x, y]?.ToString(); }
+                /*ugly way to see if allowDebug flag is true or not*/
             }
         }
         /// <summary>
