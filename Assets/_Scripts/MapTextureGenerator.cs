@@ -13,17 +13,17 @@ public static class MapTextureGenerator
         return _texture;
     } 
 
-    public static Texture2D TextureFromHeightMap(Grid<float> heigthMap)
+    public static Texture2D TextureFromHeightMap(Grid<float> heightMap)
     {
-        int _width = heigthMap.GetWitdth();
-        int _height = heigthMap.GetHeight();
+        int _width = heightMap.GetWitdth();
+        int _height = heightMap.GetHeight();
 
         Color[] colourMap = new Color[_width * _height];
         for (int y = 0; y < _height; y++)
         {
             for (int x = 0; x < _width; x++)
             {
-                colourMap[y * _width + x] = Color.Lerp(Color.black, Color.white, heigthMap.GetGridObject(x, y));
+                colourMap[y * _width + x] = Color.Lerp(Color.black, Color.white, heightMap.GetGridObject(x, y));
             }
         }
         return TextureFromColourMap(colourMap, _width, _height);

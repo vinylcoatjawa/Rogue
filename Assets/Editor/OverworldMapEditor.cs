@@ -22,15 +22,11 @@ public class OverwoldMapEditor : Editor
         {
             if (overworldMapDisplay.AutoUpdate)
             {
-                overworldMapDisplay.DisplayMap();
+                overworldMapDisplay.DrawTexture();
             }
         }
 
-            if (GUILayout.Button("Start"))
-        {
-            overworldMapDisplay.DisplayMap();
 
-        }
         if (GUILayout.Button("Start_1"))
         {
             overworldMapDisplay.DrawTexture();

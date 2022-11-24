@@ -9,6 +9,7 @@ public class OverWorldMapDisplay : MonoBehaviour
 
     public bool AutoUpdate;
     public TerrainType[] Regions;
+    public DrawMode CurrentDrawMode;
     public int Height;
     public int Width;
     public float Scale;
@@ -31,42 +32,86 @@ public class OverWorldMapDisplay : MonoBehaviour
         return _noiseMap;
     }
 
-    public void DrawNoiseMap(Grid<float> noiseMap)
-    {
+    //public void DrawNoiseMap(Grid<float> _noiseMap)
+    //{
         
-        textureRenderer = GetComponent<Renderer>();
+    //    textureRenderer = GetComponent<Renderer>();
 
-        /*Texture2D texture = new Texture2D(Width, Height);
+    //    Texture2D _texture = new Texture2D(Width, Height);
 
-        Color[] colourMap = new Color[Width * Height];
-        for (int y = 0; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                colourMap[y * Width + x] = Color.Lerp(Color.black, Color.white, noiseMap.GetGridObject(x, y));
-            }
-        }
-        texture.SetPixels(colourMap);
-        texture.Apply();*/
+    //    /*Color[] colourMap = new Color[Width * Height];
+    //    for (int y = 0; y < Height; y++)
+    //    {
+    //        for (int x = 0; x < Width; x++)
+    //        {
+    //            colourMap[y * Width + x] = Color.Lerp(Color.black, Color.white, _noiseMap.GetGridObject(x, y));
+    //        }
+    //    }
+    //    _texture.SetPixels(colourMap);
+    //    _texture.Apply();*/
 
-        textureRenderer.sharedMaterial.mainTexture = MapTextureGenerator.TextureFromHeightMap(noiseMap);
-        textureRenderer.transform.localScale = new Vector3(Width, 1, Height);
-    }
+    //    Color[] _colourMap = new Color[_noiseMap.GetWitdth() * _noiseMap.GetHeight()];
+    //    for (int y = 0; y < _noiseMap.GetHeight(); y++)
+    //    {
+    //        for (int x = 0; x < _noiseMap.GetWitdth(); x++)
+    //        {
+    //            float currentHeight = _noiseMap.GetGridObject(x, y);
+    //            for (int i = 0; i < Regions.Length; i++)
+    //            {
+    //                if (currentHeight <= Regions[i].height)
+    //                {
+    //                    _colourMap[y * _noiseMap.GetWitdth() + x] = Regions[i].colour;
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    /*textureRenderer.sharedMaterial.mainTexture = MapTextureGenerator.TextureFromHeightMap(_noiseMap);
+    //    textureRenderer.transform.localScale = new Vector3(Width, 1, Height);*/
+    //}
 
     public void DrawTexture()
     {
         textureRenderer = GetComponent<Renderer>();
 
-        Texture2D texture = MapTextureGenerator.TextureFromHeightMap(GenerateNoiseMap());
-        textureRenderer.sharedMaterial.mainTexture = texture;
-        textureRenderer.transform.localScale = new Vector3(texture.width, 1, texture.height);
-    }
+        Grid<float> _noiseMap = GenerateNoiseMap();
+        int _width = _noiseMap.GetWitdth();
+        int _height = _noiseMap.GetHeight();
 
-    public void DisplayMap()
-    {
-        DrawNoiseMap(GenerateNoiseMap());
-    }
+        Texture2D _texture;
 
+        Color[] _colourMap = new Color[_width * _height];
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                float currentHeight = _noiseMap.GetGridObject(x, y);
+                for (int i = 0; i < Regions.Length; i++)
+                {
+                    if (currentHeight <= Regions[i].height)
+                    {
+                        _colourMap[y * _width + x] = Regions[i].colour;
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        if (CurrentDrawMode == DrawMode.NoiseMap)
+        {
+            _texture = MapTextureGenerator.TextureFromHeightMap(_noiseMap);
+            textureRenderer.sharedMaterial.mainTexture = _texture;
+        }
+        else if (CurrentDrawMode == DrawMode.ColourMap)
+        {
+            _texture = MapTextureGenerator.TextureFromColourMap(_colourMap, _width, _height);
+            textureRenderer.sharedMaterial.mainTexture = _texture;
+        }
+         
+        
+    }
     [System.Serializable]
     public struct TerrainType
     {

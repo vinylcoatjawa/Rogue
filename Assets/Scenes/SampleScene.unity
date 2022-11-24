@@ -355,14 +355,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoUpdate: 1
+  Regions:
+  - name: Water
+    height: 0.4
+    colour: {r: 0.0333333, g: 0, b: 1, a: 0}
+  - name: Land
+    height: 1
+    colour: {r: 0.04245941, g: 0.41509432, b: 0.013705952, a: 0}
+  CurrentDrawMode: 1
   Height: 100
   Width: 100
   Scale: 31.33
   Octaves: 4
   Persistance: 0.46
   Lacunarity: 2
-  Seed: 17
-  OffsetX: 23
+  Seed: 15
+  OffsetX: 43
   OffsetY: 0
 --- !u!23 &716462192
 MeshRenderer:
