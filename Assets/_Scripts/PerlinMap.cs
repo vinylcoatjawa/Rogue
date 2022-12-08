@@ -15,9 +15,9 @@ public class PerlinMap : MonoBehaviour
     /// <param name="seed"></param>
     /// <param name="offset"></param>
     /// <returns>A grid of floats based on Perlin noise</returns>
-    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset, bool allowDebug = false)
+    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float cellSize, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset, bool allowDebug = false)
     {
-        Grid<float> noiseMap = new Grid<float>(mapWidth, mapHeight, 10, Vector3.zero, () => 0f, allowDebug);
+        Grid<float> noiseMap = new Grid<float>(mapWidth, mapHeight, cellSize, Vector3.zero, () => 0f, allowDebug);
         Noise noise = new Noise();
 
         Vector2[] octaveOffsets = new Vector2[octaves];

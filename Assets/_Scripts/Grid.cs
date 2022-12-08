@@ -6,10 +6,12 @@ using UnityEngine;
     /// </summary>
     public class Grid<TGridObject>
     {
+        // Default orientation X-Z axis with X being the width and Z being the height
         private int _width;
         private int _height;
         private float _cellSize;
         private Vector3 _originPosition;
+        private bool _allowDebug;
         private TGridObject[,] _gridArray;
         TextMesh[,] _debugTestArray;
         
@@ -28,38 +30,38 @@ using UnityEngine;
             this._height = height;
             this._cellSize = cellSize;
             this._originPosition = originPosition;
-
+            this._allowDebug = allowDebug;
 
             Vector3 middleOffset = new Vector3(cellSize, cellSize, 0) * 0.5f;
 
             /* initializing array with default objects */
-            _gridArray = new TGridObject[width, height];
-            for (int x = 0; x < _gridArray.GetLength(0); x++)
+            _gridArray = new TGridObject[_width, _height];
+            for (int x = 0; x < _width; x++)
             {
-                for (int y = 0; y < _gridArray.GetLength(1); y++)
+                for (int z = 0; z < _height; z++)
                 {
-                    _gridArray[x, y] = createGridObject();
+                    _gridArray[x, z] = createGridObject();
                 }
             }
-            _debugTestArray = new TextMesh[width, height];
+            _debugTestArray = new TextMesh[_width, _height];
             # region DEBUGARRAY
-            if (allowDebug)
+            if (_allowDebug)
             {
                 GameObject debugGrid = new GameObject("debug grid");
-                for (int x = 0; x < _gridArray.GetLength(0); x++)
+                for (int x = 0; x < _width; x++)
                 {
-                    for (int y = 0; y < _gridArray.GetLength(1); y++)
+                    for (int z = 0; z < _height; z++)
                     {
-                        _debugTestArray[x, y] = CreateWorldText(_gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + middleOffset, 20, Color.black, TextAnchor.MiddleCenter);
-                        _debugTestArray[x, y].gameObject.transform.SetParent(debugGrid.transform);
+                        _debugTestArray[x, z] = CreateWorldText(_gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + middleOffset, 20, Color.black, TextAnchor.MiddleCenter);
+                        _debugTestArray[x, z].gameObject.transform.SetParent(debugGrid.transform);
 
-                        Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.black, 100f);
-                        Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.black, 100f);
+                        Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.black, 100f);
+                        Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.black, 100f);
                     }
                 }
 
-                Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.black, 100f);
-                Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.black, 100f);
+                Debug.DrawLine(GetWorldPosition(0, _height), GetWorldPosition(_width, _height), Color.black, 100f);
+                Debug.DrawLine(GetWorldPosition(_width, 0), GetWorldPosition(_width, _height), Color.black, 100f);
             }
 
             #endregion
@@ -87,11 +89,11 @@ using UnityEngine;
         /// Returns the 2D gridcells position in the 3D worldspace
         /// </summary>
         /// <param name="x">The gridcells 'x' coordinate</param>
-        /// <param name="y">The gridcells 'y' coordinate</param>
+        /// <param name="z">The gridcells 'z' coordinate</param>
         /// <returns></returns>
-        public Vector3 GetWorldPosition(int x, int y) // convert from grid space to world space
+        public Vector3 GetWorldPosition(int x, int z) // convert from grid space to world space
         {
-            return new Vector3(x, y, 0) * _cellSize + _originPosition;
+            return new Vector3(x, 0, z) * _cellSize + _originPosition;
         }
         /// <summary>
         /// Returns the cellsize of the grid
@@ -105,28 +107,28 @@ using UnityEngine;
         /// Sets the object stored on the grid position
         /// </summary>
         /// <param name="x">X coord of the cell</param>
-        /// <param name="y">Y coord of the cell</param>
+        /// <param name="z">Z coord of the cell</param>
         /// <param name="value">The value to be set</param>
-        public void SetGridObject(int x, int y, TGridObject value) // setting object on grid position
+        public void SetGridObject(int x, int z, TGridObject value) // setting object on grid position
         {
-            if (x >= 0 && y >= 0 && x < _width && y < _height)
+            if (x >= 0 && z >= 0 && x < _width && z < _height)
             {
-                _gridArray[x, y] = value;
-                if (_debugTestArray[0,0] != null) { _debugTestArray[x, y].text = _gridArray[x, y]?.ToString(); }
+                _gridArray[x, z] = value;
+                if (_debugTestArray[0,0] != null) { _debugTestArray[x, z].text = _gridArray[x, z]?.ToString(); }
                 /*ugly way to see if allowDebug flag is true or not*/
             }
         }
-        /// <summary>
-        /// Reads and returns the object stored on grid position (x, y)
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y">A custom grid object</param>
-        /// <returns></returns>
-        public TGridObject GetGridObject(int x, int y)
+    /// <summary>
+    /// Reads and returns the object stored on grid position (x, z)
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="z"></param>
+    /// <returns>A custom grid object</returns>
+    public TGridObject GetGridObject(int x, int z)
         {
-            if (x >= 0 && y >= 0 && x < _width && y < _height)
+            if (x >= 0 && z >= 0 && x < _width && z < _height)
             {
-                return _gridArray[x, y];
+                return _gridArray[x, z];
             }
             else
             {
@@ -138,11 +140,11 @@ using UnityEngine;
         /// </summary>
         /// <param name="worldPosition"></param>
         /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void GetXY(Vector3 worldPosition, out int x, out int y) // convert from world space to grid space
+        /// <param name="z"></param>
+        public void GetXY(Vector3 worldPosition, out int x, out int z) // convert from world space to grid space
         {
             x = Mathf.FloorToInt((worldPosition - _originPosition).x / _cellSize);
-            y = Mathf.FloorToInt((worldPosition - _originPosition).y / _cellSize);
+            z = Mathf.FloorToInt((worldPosition - _originPosition).z / _cellSize);
         }
         /// <summary>
         /// Setting grid object using world space coordinates
@@ -151,22 +153,22 @@ using UnityEngine;
         /// <param name="value"></param>
         public void SetGridObject(Vector3 wordPosition, TGridObject value) // setting object in world space
         {
-            int x, y;
-            GetXY(wordPosition, out x, out y);
-            SetGridObject(x, y, value);
+            int x, z;
+            GetXY(wordPosition, out x, out z);
+            SetGridObject(x, z, value);
         }
         /// <summary>
-        /// Setting grid object based on world space coordinates
+        /// Getting grid object based on world space coordinates
         /// </summary>
         /// <param name="worldPosition"></param>
         /// <returns></returns>
         public TGridObject GetGridObject(Vector3 worldPosition) // getting grid object from world position
         {
-            int x, y;
-            GetXY(worldPosition, out x, out y);
-            if (x >= 0 && y >= 0 && x < _width && y < _height)
+            int x, z;
+            GetXY(worldPosition, out x, out z);
+            if (x >= 0 && z >= 0 && x < _width && z < _height)
             {
-                return GetGridObject(x, y);
+                return GetGridObject(x, z);
             }
             else
             {

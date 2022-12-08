@@ -32,5 +32,10 @@ public class OverwoldMapEditor : Editor
             overworldMapDisplay.DrawTexture();
 
         }
+        if (GUILayout.Button("Structures"))
+        {
+            overworldMapDisplay.GenerateStructures();
+
+        }
     }
 }

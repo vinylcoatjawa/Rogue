@@ -17,7 +17,7 @@ public class GridTester : MonoBehaviour
     }
     public void DrawGrid()
     {
-        gridArray = new Grid<int>(_width, _height, 10f, Vector3.zero, () => 0, true);
+        gridArray = new Grid<int>(_width, _height, 5f, Vector3.zero, () => 0, true);
     }
 
     public void SetValue()
@@ -27,7 +27,7 @@ public class GridTester : MonoBehaviour
 
     public void GetPMap()
     {
-        PerlinMap.GenerateNoiseMap(_width, _height, 10, 3, 0.5f, 0.5f, 123, new Vector2(2, 5), true);
+        PerlinMap.GenerateNoiseMap(_width, _height, 10, 5f, 3, 0.5f, 0.5f, 123, new Vector2(2, 5), true);
         Debug.Log("PM");
 
 

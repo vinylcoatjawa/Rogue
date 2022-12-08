@@ -12,6 +12,7 @@ public class OverWorldMapDisplay : MonoBehaviour
     public DrawMode CurrentDrawMode;
     public int Height;
     public int Width;
+    public float Cellsize;
     public float Scale;
     public int Octaves;
     [Range(0,1)]
@@ -20,56 +21,20 @@ public class OverWorldMapDisplay : MonoBehaviour
     public uint Seed;
     public int OffsetX;
     public int OffsetY;
+    public bool AllowDebug = false;
+    public bool AllowStructDebug;
 
     Renderer textureRenderer;
     Grid<float> _noiseMap;
+    Grid<int> _structures;
 
 
     public Grid<float> GenerateNoiseMap()
     {
         Vector2 offset = new Vector2(OffsetX, OffsetY);
-        _noiseMap = PerlinMap.GenerateNoiseMap(Width, Height, Scale, Octaves, Persistance, Lacunarity, Seed, offset, false);
+        _noiseMap = PerlinMap.GenerateNoiseMap(Width, Height, Cellsize, Scale, Octaves, Persistance, Lacunarity, Seed, offset, AllowDebug);
         return _noiseMap;
     }
-
-    //public void DrawNoiseMap(Grid<float> _noiseMap)
-    //{
-        
-    //    textureRenderer = GetComponent<Renderer>();
-
-    //    Texture2D _texture = new Texture2D(Width, Height);
-
-    //    /*Color[] colourMap = new Color[Width * Height];
-    //    for (int y = 0; y < Height; y++)
-    //    {
-    //        for (int x = 0; x < Width; x++)
-    //        {
-    //            colourMap[y * Width + x] = Color.Lerp(Color.black, Color.white, _noiseMap.GetGridObject(x, y));
-    //        }
-    //    }
-    //    _texture.SetPixels(colourMap);
-    //    _texture.Apply();*/
-
-    //    Color[] _colourMap = new Color[_noiseMap.GetWitdth() * _noiseMap.GetHeight()];
-    //    for (int y = 0; y < _noiseMap.GetHeight(); y++)
-    //    {
-    //        for (int x = 0; x < _noiseMap.GetWitdth(); x++)
-    //        {
-    //            float currentHeight = _noiseMap.GetGridObject(x, y);
-    //            for (int i = 0; i < Regions.Length; i++)
-    //            {
-    //                if (currentHeight <= Regions[i].height)
-    //                {
-    //                    _colourMap[y * _noiseMap.GetWitdth() + x] = Regions[i].colour;
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    /*textureRenderer.sharedMaterial.mainTexture = MapTextureGenerator.TextureFromHeightMap(_noiseMap);
-    //    textureRenderer.transform.localScale = new Vector3(Width, 1, Height);*/
-    //}
 
     public void DrawTexture()
     {
@@ -126,5 +91,12 @@ public class OverWorldMapDisplay : MonoBehaviour
         if (Height < 1) { Height = 1; }
         if (Lacunarity < 1) { Lacunarity = 1; }
         if (Octaves < 0) { Octaves = 0; }
+    }
+
+    public void GenerateStructures()
+    {
+        float width = (float)Width / 6;
+        float height = (float)Height  / 6;
+        _structures = new Grid<int>((int)width, (int)height, 60f, Vector3.zero, () => 0, AllowStructDebug);
     }
 }
