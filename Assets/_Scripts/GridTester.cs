@@ -17,7 +17,7 @@ public class GridTester : MonoBehaviour
     }
     public void DrawGrid()
     {
-        gridArray = new Grid<int>(_width, _height, 5f, Vector3.zero, () => 0, true);
+        gridArray = new Grid<int>(_width, _height, 5f, new Vector3(-500,0,-500), () => 0, true);
     }
 
     public void SetValue()

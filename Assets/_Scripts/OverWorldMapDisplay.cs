@@ -10,9 +10,9 @@ public class OverWorldMapDisplay : MonoBehaviour
     public bool AutoUpdate;
     public TerrainType[] Regions;
     public DrawMode CurrentDrawMode;
-    public int Height;
-    public int Width;
-    public float Cellsize;
+    public int Height = 60;
+    public int Width = 60;
+    public float CellSize = 10f;
     public float Scale;
     public int Octaves;
     [Range(0,1)]
@@ -32,7 +32,7 @@ public class OverWorldMapDisplay : MonoBehaviour
     public Grid<float> GenerateNoiseMap()
     {
         Vector2 offset = new Vector2(OffsetX, OffsetY);
-        _noiseMap = PerlinMap.GenerateNoiseMap(Width, Height, Cellsize, Scale, Octaves, Persistance, Lacunarity, Seed, offset, AllowDebug);
+        _noiseMap = PerlinMap.GenerateNoiseMap(Width, Height, CellSize, Scale, Octaves, Persistance, Lacunarity, Seed, offset, AllowDebug);
         return _noiseMap;
     }
 
@@ -97,6 +97,7 @@ public class OverWorldMapDisplay : MonoBehaviour
     {
         float width = (float)Width / 6;
         float height = (float)Height  / 6;
-        _structures = new Grid<int>((int)width, (int)height, 60f, Vector3.zero, () => 0, AllowStructDebug);
+        //float cellSize = CellSize * Height;
+        _structures = new Grid<int>((int)width, (int)height, 100f, Vector3.zero, () => 0, AllowStructDebug);
     }
 }

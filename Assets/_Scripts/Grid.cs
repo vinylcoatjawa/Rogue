@@ -32,10 +32,11 @@ using UnityEngine;
             this._originPosition = originPosition;
             this._allowDebug = allowDebug;
 
-            Vector3 middleOffset = new Vector3(cellSize, cellSize, 0) * 0.5f;
 
-            /* initializing array with default objects */
-            _gridArray = new TGridObject[_width, _height];
+            Vector3 middleOffset = new Vector3(cellSize, 0, cellSize) * 0.5f;
+
+        /* initializing array with default objects */
+        _gridArray = new TGridObject[_width, _height];
             for (int x = 0; x < _width; x++)
             {
                 for (int z = 0; z < _height; z++)
@@ -52,7 +53,7 @@ using UnityEngine;
                 {
                     for (int z = 0; z < _height; z++)
                     {
-                        _debugTestArray[x, z] = CreateWorldText(_gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + middleOffset, 20, Color.black, TextAnchor.MiddleCenter);
+                        _debugTestArray[x, z] = CreateWorldText(_gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + middleOffset, (int)_cellSize, Color.black, TextAnchor.MiddleCenter);
                         _debugTestArray[x, z].gameObject.transform.SetParent(debugGrid.transform);
 
                         Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.black, 100f);
@@ -91,14 +92,14 @@ using UnityEngine;
         /// <param name="x">The gridcells 'x' coordinate</param>
         /// <param name="z">The gridcells 'z' coordinate</param>
         /// <returns></returns>
-        public Vector3 GetWorldPosition(int x, int z) // convert from grid space to world space
+        public Vector3 GetWorldPosition(int x, int z, int y = 0) // convert from grid space to world space
         {
-            return new Vector3(x, 0, z) * _cellSize + _originPosition;
+            return new Vector3(x, y, z) * _cellSize + _originPosition;
         }
         /// <summary>
         /// Returns the cellsize of the grid
         /// </summary>
-        /// <returns>Cellsize as float</returns>
+        /// <returns>CellSize as float</returns>
         public float GetCellsize()
         {
             return _cellSize;
@@ -190,6 +191,10 @@ using UnityEngine;
             textMesh.text = text;
             textMesh.fontSize = fontSize;
             textMesh.color = color;
+
+            transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+      
+
             return textMesh;
         }
         public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left)
