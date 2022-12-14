@@ -5,10 +5,6 @@ using UnityEngine;
 public class OverwoldMapEditor : Editor
 {
 
-    Grid<float> noiseMap;
-
-    
-
 
     
     public override void OnInspectorGUI()
