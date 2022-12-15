@@ -387,7 +387,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 646, z: 0}
+  m_LocalPosition: {x: 300, y: 556.1, z: 300}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -574,7 +574,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 948718956808f9943ab31300e96bf95f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -611,14 +611,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820695554}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 300, y: 0, z: 300}
+  m_LocalScale: {x: 60, y: 1, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1820695559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,30 +628,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 1820695554}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b95a341ba8d15ee48b0cb71cd8f7f0bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c3dd43a8706920458e4e5082b6dea5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoUpdate: 0
   Regions:
   - name: Water
     height: 0.4
-    colour: {r: 0.012897275, g: 0, b: 0.6792453, a: 0}
+    colour: {r: 0.033018887, g: 0.04077723, b: 1, a: 0}
+  - name: Sand
+    height: 0.5
+    colour: {r: 1, g: 0.9978458, b: 0.031372547, a: 0}
   - name: Land
+    height: 0.7
+    colour: {r: 0.11110665, g: 0.6792453, b: 0.041651852, a: 0}
+  - name: Highland
+    height: 0.7
+    colour: {r: 0.06227646, g: 0.383, b: 0.024910567, a: 0}
+  - name: Mountains
+    height: 0.85
+    colour: {r: 0.16981131, g: 0.11398207, b: 0.059094343, a: 0}
+  - name: Snow
     height: 1
-    colour: {r: 0.056866758, g: 0.6784314, b: 0, a: 0}
-  CurrentDrawMode: 0
-  Height: 60
-  Width: 60
-  CellSize: 10
-  Scale: 25
-  Octaves: 4
-  Persistance: 0.357
-  Lacunarity: 1
-  Seed: 20
-  OffsetX: 25
-  OffsetY: 16
-  AllowDebug: 0
-  AllowStructDebug: 0
+    colour: {r: 1, g: 1, b: 1, a: 0}
+  overworldData: {fileID: 11400000, guid: 1091e83dee602cd429244361a608837c, type: 2}
 --- !u!1 &1879130839
 GameObject:
   m_ObjectHideFlags: 0

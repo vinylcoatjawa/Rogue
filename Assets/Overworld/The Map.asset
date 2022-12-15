@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33ecc94bff3b184d8be04065891d171, type: 3}
   m_Name: The Map
   m_EditorClassIdentifier: 
-  Seed: 0
+  Seed: -1184914126
+  mapName: as
