@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Start was clicked");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        overworldMapDisplay.Draw();
+        
     }
 
     public void QuitGame()

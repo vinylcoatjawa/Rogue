@@ -24,7 +24,7 @@ public class OverWorldMapDisplay : MonoBehaviour
     public bool AllowDebug = false;
     public bool AllowStructDebug;
 
-    Renderer textureRenderer;
+    Renderer _textureRenderer;
     Grid<float> _noiseMap;
     Grid<int> _structures;
 
@@ -33,30 +33,33 @@ public class OverWorldMapDisplay : MonoBehaviour
     {
         Vector2 offset = new Vector2(OffsetX, OffsetY);
         _noiseMap = PerlinMap.GenerateNoiseMap(Width, Height, CellSize, Scale, Octaves, Persistance, Lacunarity, Seed, offset, AllowDebug);
+        //_noiseMap = PerlinMap.GenerateNoiseMap(60, 60, 10, 165, 4, 0.33f, 2.5f, 159, new Vector2(898,37), false);
         return _noiseMap;
     }
 
     public void DrawTexture()
     {
-        textureRenderer = GetComponent<Renderer>();
+        
+        _textureRenderer = GetComponent<Renderer>();
 
         Grid<float> _noiseMap = GenerateNoiseMap();
-        int _width = _noiseMap.GetWitdth();
-        int _height = _noiseMap.GetHeight();
+        int width = _noiseMap.GetWitdth();
+        int height = _noiseMap.GetHeight();
+
 
         Texture2D _texture;
 
-        Color[] _colourMap = new Color[_width * _height];
-        for (int y = 0; y < _height; y++)
+        Color[] _colourMap = new Color[width * height];
+        for (int y = 0; y < height; y++)
         {
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < width; x++)
             {
                 float currentHeight = _noiseMap.GetGridObject(x, y);
                 for (int i = 0; i < Regions.Length; i++)
                 {
                     if (currentHeight <= Regions[i].height)
                     {
-                        _colourMap[y * _width + x] = Regions[i].colour;
+                        _colourMap[y * width + x] = Regions[i].colour;
                         break;
                     }
                 }
@@ -67,12 +70,12 @@ public class OverWorldMapDisplay : MonoBehaviour
         if (CurrentDrawMode == DrawMode.NoiseMap)
         {
             _texture = MapTextureGenerator.TextureFromHeightMap(_noiseMap);
-            textureRenderer.sharedMaterial.mainTexture = _texture;
+            _textureRenderer.sharedMaterial.mainTexture = _texture;
         }
         else if (CurrentDrawMode == DrawMode.ColourMap)
         {
-            _texture = MapTextureGenerator.TextureFromColourMap(_colourMap, _width, _height);
-            textureRenderer.sharedMaterial.mainTexture = _texture;
+            _texture = MapTextureGenerator.TextureFromColourMap(_colourMap, width, height);
+            _textureRenderer.sharedMaterial.mainTexture = _texture;
         }
          
         
@@ -95,9 +98,10 @@ public class OverWorldMapDisplay : MonoBehaviour
 
     public void GenerateStructures()
     {
-        float width = (float)Width / 6;
-        float height = (float)Height  / 6;
+        float width = (float)Width / 10;
+        float height = (float)Height / 10;
         //float cellSize = CellSize * Height;
-        _structures = new Grid<int>((int)width, (int)height, 100f, Vector3.zero, () => 0, AllowStructDebug);
+        //_structures = new Grid<int>((int)width, (int)height, CellSize * 6, Vector3.zero, () => 0, AllowStructDebug);
+        _structures = new Grid<int>(10, 10, 60, Vector3.zero, () => 0, AllowStructDebug);
     }
 }

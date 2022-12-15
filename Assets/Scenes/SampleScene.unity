@@ -152,7 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277657634
 GameObject:
@@ -183,7 +183,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &284347035
 GameObject:
@@ -357,22 +357,34 @@ MonoBehaviour:
   AutoUpdate: 1
   Regions:
   - name: Water
-    height: 0.4
+    height: 0.35
     colour: {r: 0.0333333, g: 0, b: 1, a: 0}
+  - name: Sand
+    height: 0.4
+    colour: {r: 0.9786186, g: 1, b: 0, a: 0}
   - name: Land
-    height: 1
+    height: 0.6
     colour: {r: 0.04245941, g: 0.41509432, b: 0.013705952, a: 0}
+  - name: Highland
+    height: 0.8
+    colour: {r: 0.014735845, g: 0.142, b: 0.0040188693, a: 0}
+  - name: Mountain
+    height: 0.9
+    colour: {r: 0.255, g: 0.20755713, b: 0.11426886, a: 0}
+  - name: Snow
+    height: 1
+    colour: {r: 1, g: 1, b: 1, a: 0}
   CurrentDrawMode: 1
-  Height: 60
-  Width: 60
+  Height: 360
+  Width: 360
   CellSize: 10
-  Scale: 31.33
+  Scale: 165
   Octaves: 4
-  Persistance: 0.46
-  Lacunarity: 2
-  Seed: 27
-  OffsetX: 893
-  OffsetY: 0
+  Persistance: 0.33
+  Lacunarity: 2.5
+  Seed: 159
+  OffsetX: 921
+  OffsetY: 53
   AllowDebug: 0
   AllowStructDebug: 1
 --- !u!23 &716462192
@@ -433,8 +445,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 716462190}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 500, y: 0, z: 500}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalPosition: {x: 300, y: 0, z: 300}
+  m_LocalScale: {x: 60, y: 1, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -578,13 +590,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1016302690}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1076970405
 GameObject:
@@ -648,7 +660,7 @@ Transform:
   - {fileID: 963194228}
   - {fileID: 705507995}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1395026300
 GameObject:
@@ -679,7 +691,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1753169545
 GameObject:
@@ -772,7 +784,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1987433826
 GameObject:
@@ -803,5 +815,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
