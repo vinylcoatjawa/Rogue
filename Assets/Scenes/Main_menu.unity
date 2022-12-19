@@ -1448,7 +1448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3546cd70ab01654cb20c05193890b85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overworldData: {fileID: 11400000, guid: 1091e83dee602cd429244361a608837c, type: 2}
+  overworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}
 --- !u!1 &1395026300
 GameObject:
   m_ObjectHideFlags: 0

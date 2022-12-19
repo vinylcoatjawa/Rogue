@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class WorldMap : MonoBehaviour
 {
     public TerrainType[] Regions;
-    public OverworldData overworldData;
+    public OverworldMapData overworldMapData;
     public GameObject Dung;
 
     Renderer _textureRenderer;
@@ -19,14 +19,13 @@ public class WorldMap : MonoBehaviour
     private void Awake()
     {
         _textureRenderer = GetComponent<Renderer>();
-        if (overworldData.Seed == 0) { overworldData.Seed = Random.Range(int.MinValue, int.MaxValue); } // making sure to generate map with random seed even if no input was given       
+        if (overworldMapData.Seed == 0) { overworldMapData.Seed = Random.Range(int.MinValue, int.MaxValue); } // making sure to generate map with random seed even if no input was given       
     }
     private void Start()
     {
-        _noiseMap = PerlinMap.GenerateNoiseMap(360, 360, 10 , 165, 4, 0.33f, 2.5f, (uint)overworldData.Seed, Vector2.zero, false);
+        _noiseMap = PerlinMap.GenerateNoiseMap(360, 360, 10 , 165, 4, 0.33f, 2.5f, (uint)overworldMapData.Seed, Vector2.zero, false);
         _structures = new Grid<bool>(10, 10, 60, Vector3.zero, () => false, false);
         _structurePosition = FindStructurePosition(CheckForSuitableDungeonTile());
-        Debug.Log(_structurePosition.ToString());
         DrawTexture();
         SpawnDungeonIcon();
      
