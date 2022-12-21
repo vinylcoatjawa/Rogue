@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class DungeonInstance : MonoBehaviour
 {
-    public ScriptableObject DungeonOneData;
+    public OverworldMapData OverworldMapData;
     private void Awake()
     {
         Debug.Log("Dungeon 1 is loaded");
+        Debug.Log(OverworldMapData.D1Seed + "  " + OverworldMapData.D2Seed);
     }
 }

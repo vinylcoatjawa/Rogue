@@ -111,4 +111,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f023b05cd190b40aa3273c2de4a3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DungeonData: {fileID: 11400000, guid: 3620b8185ce0ffc4aa6df767230575bb, type: 2}
+  OverworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}

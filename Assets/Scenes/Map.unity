@@ -650,7 +650,7 @@ MonoBehaviour:
   - name: Snow
     height: 1
     colour: {r: 1, g: 1, b: 1, a: 0}
-  overworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}
+  OverworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}
   Dung: {fileID: 774277570198495364, guid: 4278be403bd4dfe4aa24004f1f15b8f6, type: 3}
 --- !u!1 &1879130839
 GameObject:

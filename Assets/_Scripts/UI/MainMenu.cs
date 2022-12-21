@@ -3,13 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    int randint;
-    OverWorldMapDisplay overworldMapDisplay;
-
-    private void Awake()
-    {
-        overworldMapDisplay = GetComponent<OverWorldMapDisplay>();
-    }
+   
 
     public void StartGame()
     {

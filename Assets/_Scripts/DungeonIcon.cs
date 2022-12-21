@@ -1,12 +1,9 @@
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 
 public class DungeonIcon : MonoBehaviour
 {
-    public ScriptableObject DungeonData;
+    public OverworldMapData OverworldMapData;
     
     Renderer _meshRenderer;
     Color _originalColor;
@@ -30,7 +27,8 @@ public class DungeonIcon : MonoBehaviour
     private void OnMouseUp()
     {
 
-        //SceneManager.LoadScene(DungeonData.dungeonName);
-        SceneManager.LoadScene("Dungeon_1");
+
+        SceneManager.LoadScene(OverworldMapData.D1InternalName);
+        //Debug.Log((string)OverworldMapData._d1InternalName);
     }
 }
