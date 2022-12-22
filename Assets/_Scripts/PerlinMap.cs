@@ -1,7 +1,7 @@
 using UnityEngine;
 using NoiseUtils;
 
-public class PerlinMap : MonoBehaviour
+public class PerlinMap
 {
     /// <summary>
     /// Generates a Perlin noise based map on a 2D grid with float values from 0 to 1
