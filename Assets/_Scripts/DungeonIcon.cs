@@ -14,7 +14,6 @@ public class DungeonIcon : MonoBehaviour
         _originalColor = _meshRenderer.material.color;
     }
 
-
     private void OnMouseEnter()
     {
         _meshRenderer.material.color = Color.red;
@@ -26,9 +25,6 @@ public class DungeonIcon : MonoBehaviour
     }
     private void OnMouseUp()
     {
-
-
         SceneManager.LoadScene(OverworldMapData.D1InternalName);
-        //Debug.Log((string)OverworldMapData._d1InternalName);
     }
 }
