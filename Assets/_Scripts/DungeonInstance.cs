@@ -4,13 +4,19 @@ using UnityEngine.SceneManagement;
 public class DungeonInstance : MonoBehaviour
 {
     public OverworldMapData OverworldMapData;
+    public DungeonInstanceData DungeonInstanceData;
 
-    string currentDungeon;
+    string _currentDungeon;
+    int _dungeonSeed;
 
     private void Awake()
     {
-        currentDungeon = SceneManager.GetActiveScene().name;
-        Debug.Log(currentDungeon);
+        DungeonInstanceData.dungeonSeed = OverworldMapData.Seed % 10;
+
+
+
+        _currentDungeon = SceneManager.GetActiveScene().name;
+        Debug.Log(_currentDungeon + " with seed " + _dungeonSeed);
     }
 
 

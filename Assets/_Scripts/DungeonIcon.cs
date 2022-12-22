@@ -18,7 +18,6 @@ public class DungeonIcon : MonoBehaviour
     {
         _meshRenderer.material.color = Color.red;
     }
-
     private void OnMouseExit()
     {
         _meshRenderer.material.color = _originalColor;
