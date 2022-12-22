@@ -1,18 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class OverworldStructureCustomTile : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private int _noOfPixels;
+    private int _noOfGrassTiles;
+    private float _noOfMountainTiles;
+    private float _noOfWaterTiles;
+    public OverworldStructureCustomTile(int noOfPixels, int noOfGrassTiles, int noOfMountainTiles, int noOfWaterTiles)
     {
-        
+        this._noOfPixels = noOfPixels;
+        this._noOfGrassTiles = noOfGrassTiles;
+        this._noOfMountainTiles = noOfMountainTiles;
+        this._noOfWaterTiles = noOfWaterTiles;
     }
 
-    // Update is called once per frame
-    void Update()
+    public float GetWaterPorportion()
     {
-        
+        return _noOfWaterTiles / _noOfPixels;
+    }
+    public float GetGrassPorportion()
+    {
+        return _noOfGrassTiles / _noOfPixels;
+    }
+    public float GetMountainPorportion()
+    {
+        return _noOfMountainTiles / _noOfPixels;
     }
 }
