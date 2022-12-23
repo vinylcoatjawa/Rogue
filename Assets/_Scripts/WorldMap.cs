@@ -12,6 +12,7 @@ public class WorldMap : MonoBehaviour
     Renderer _textureRenderer;
     Grid<float> _noiseMap;
     Grid<bool> _structures;
+    Grid<OverworldStructureCustomTile> _overworldMapStructureGrid;
     List<Vector2> _possibleStructurePositions;
     Vector2 _structurePosition;
 
@@ -25,9 +26,12 @@ public class WorldMap : MonoBehaviour
     {
         _noiseMap = PerlinMap.GenerateNoiseMap(360, 360, 10 , 165, 4, 0.33f, 2.5f, (uint)OverworldMapData.Seed, Vector2.zero, false);
         _structures = new Grid<bool>(10, 10, 60, Vector3.zero, () => false, false);
-        _structurePosition = FindStructurePosition(CheckForSuitableDungeonTile());
+        _overworldMapStructureGrid = new Grid<OverworldStructureCustomTile>(10, 10, 60, Vector3.zero, () => default, false);
+        //_structurePosition = FindStructurePosition(CheckForSuitableDungeonTile());
         DrawTexture();
         SpawnDungeonIcon();
+        CheckForSuitableDungeonTile();
+        Display();
      
     }
 
@@ -66,34 +70,50 @@ public class WorldMap : MonoBehaviour
     /// Map is divided up to 100 tiles and checked whether we have water in those, if not the coordinates are saved in a list
     /// </summary>
     /// <returns>List of suitable dungeon positions as vector 2s</returns>
-    public List<Vector2> CheckForSuitableDungeonTile()
+    public void CheckForSuitableDungeonTile()
     {
-        List<Vector2> possibleStructurePositions = new List<Vector2>();
+        
+        
+        List<OverworldStructureCustomTile> possibleStructurePositions = new List<OverworldStructureCustomTile>();
 
-        for (int x = 0; x < _structures.GetWitdth(); x++)
+        for (int x = 0; x < _overworldMapStructureGrid.GetWitdth(); x++)
         {
-            for (int z = 0; z < _structures.GetHeight(); z++)
+            for (int z = 0; z < _overworldMapStructureGrid.GetHeight(); z++)
             {
-
-                possibleStructurePositions.Add(new Vector2(x, z));
-                for (int i = x * 36; i < (x + 1) * 36; i++)
+                int water = 0, grass = 0, mountain = 0, total = 0;
+                //float waterp, grassp, mountainp;
+                
+                for (int i = x * 36; i < (x + 1) * 36; i++) // currently 36 is the hard coded size difference between the underlying perlin noise and the structure grid
                 {
                     for (int j = z * 36; j < (z + 1) * 36; j++)
                     {
-                        
+                        total++;
                         if (_noiseMap.GetGridObject(i, j) <= 0.4)
-                        {             
-                            i = int.MaxValue - 1;
-                            _structures.SetGridObject(x, z, true);
-                            possibleStructurePositions.Remove(new Vector2(x, z));
-                            break;                         
+                        {
+                            water++;
                         }
+                        else if (_noiseMap.GetGridObject(i, j) >= 0.8)
+                        {
+                            mountain++;
+                        }
+                        else/* if (_noiseMap.GetGridObject(i, j) < 0.8 && _noiseMap.GetGridObject(i, j) > 0.4)*/
+                        {
+                            grass++;
+                        }
+                       
                         
                     }
                 }
+                /*waterp = water / total;
+                mountainp = mountain / total;
+                grassp = grass / total;*/
+                OverworldStructureCustomTile current = new OverworldStructureCustomTile(total, grass, mountain, water);
+
+                _overworldMapStructureGrid.SetGridObject(x, z, current);
+
             }
         }
-        return possibleStructurePositions;
+        
     }
     /// <summary>
     /// Picks a random vector 2 out of a list of vector 2s
@@ -122,7 +142,22 @@ public class WorldMap : MonoBehaviour
     }
 
     
-
+    public void Display()
+    {
+        
+        
+        for (int x = 0; x < _overworldMapStructureGrid.GetWitdth(); x++)
+        {
+            for (int z = 0; z < _overworldMapStructureGrid.GetHeight(); z++)
+            {
+                Debug.Log(_overworldMapStructureGrid.GetGridObject(x, z).GetTotal());
+                Debug.Log("At (" + x + ", " + z + ") the water is" + _overworldMapStructureGrid.GetGridObject(x, z).GetWaterPorportion() +
+                    " the grass is " + _overworldMapStructureGrid.GetGridObject(x, z).GetGrassPorportion() + " and mountain is " +
+                    _overworldMapStructureGrid.GetGridObject(x, z).GetMountainPorportion());
+            }
+        }
+        
+    }
 
 
 }

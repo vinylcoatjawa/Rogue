@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 using UnityEngine;
-[CreateAssetMenu(fileName = "OverworldMapData", menuName = "OverworldMapData")]
+[CreateAssetMenu(fileName = "OverworldMapData", menuName = "Overworld/Map/OverworldMapData")]
 public class OverworldMapData : ScriptableObject
 {
     string _d1InternalName = "Dungeon_1";

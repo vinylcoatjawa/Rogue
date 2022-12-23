@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OverworldStructureCustomTile : MonoBehaviour
+public class OverworldStructureCustomTile
 {
     private int _noOfPixels;
     private int _noOfGrassTiles;
@@ -16,14 +16,18 @@ public class OverworldStructureCustomTile : MonoBehaviour
 
     public float GetWaterPorportion()
     {
-        return _noOfWaterTiles / _noOfPixels;
+        return _noOfWaterTiles / (float)_noOfPixels;
     }
     public float GetGrassPorportion()
     {
-        return _noOfGrassTiles / _noOfPixels;
+        return _noOfGrassTiles / (float)_noOfPixels;
     }
     public float GetMountainPorportion()
     {
-        return _noOfMountainTiles / _noOfPixels;
+        return _noOfMountainTiles / (float)_noOfPixels;
+    }
+    public float GetTotal()
+    {
+        return _noOfPixels;
     }
 }

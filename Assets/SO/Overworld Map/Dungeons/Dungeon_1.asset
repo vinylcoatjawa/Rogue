@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f119e56ea6296641beed836b26fbb8e, type: 3}
-  m_Name: OverworldMapData
+  m_Script: {fileID: 11500000, guid: b3418f15c26654d42a579aed3533601b, type: 3}
+  m_Name: Dungeon_1
   m_EditorClassIdentifier: 
-  _d1InternalName: Dungeon_1
-  Seed: -1280880578
-  mapName: cscs
-  d1Seed: 12
-  d2Seed: 36
+  dungeonSeed: 0
