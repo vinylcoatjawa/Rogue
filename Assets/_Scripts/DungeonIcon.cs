@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class DungeonIcon : MonoBehaviour
 {
     public OverworldMapData OverworldMapData;
+    public DungeonInstanceData DungeonInstanceData;
     
     Renderer _meshRenderer;
     Color _originalColor;

@@ -112,3 +112,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OverworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}
+  DungeonInstanceData: {fileID: 11400000, guid: 27ab162c43e7064439d7026cfedb7bfd, type: 2}
