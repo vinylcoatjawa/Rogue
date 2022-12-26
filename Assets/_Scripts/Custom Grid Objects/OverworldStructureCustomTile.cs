@@ -14,15 +14,15 @@ public class OverworldStructureCustomTile
         this._noOfWaterTiles = noOfWaterTiles;
     }
 
-    public float GetWaterPorportion()
+    public float GetWaterProportion()
     {
         return _noOfWaterTiles / (float)_noOfPixels;
     }
-    public float GetGrassPorportion()
+    public float GetGrassProportion()
     {
         return _noOfGrassTiles / (float)_noOfPixels;
     }
-    public float GetMountainPorportion()
+    public float GetMountainProportion()
     {
         return _noOfMountainTiles / (float)_noOfPixels;
     }

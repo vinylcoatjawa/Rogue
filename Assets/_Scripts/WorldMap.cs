@@ -2,6 +2,8 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using Unity.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using UnityEngine.SceneManagement;
 
 public class WorldMap : MonoBehaviour
 {
@@ -9,13 +11,16 @@ public class WorldMap : MonoBehaviour
     public OverworldMapData OverworldMapData;
     public GameObject Dung;
 
+    string[] DungeonNameList = { "Dungeon 1", "Dungeon 2", "Dungeon 3", "Dungeon 4", "Dungeon 5" };
+
     Renderer _textureRenderer;
     Grid<float> _noiseMap;
     Grid<bool> _structures;
     Grid<OverworldStructureCustomTile> _overworldMapStructureGrid;
-    List<Vector2> _possibleStructurePositions;
+    List<OverworldStructureCustomTile> _possibleStructurePositions;
     Vector2 _structurePosition;
-
+    Dictionary<Vector2, OverworldStructureCustomTile> _possibleStructureDict = new Dictionary<Vector2, OverworldStructureCustomTile>();
+    Dictionary<Vector2, OverworldStructureCustomTile> _chosenStructuresDict = new Dictionary<Vector2, OverworldStructureCustomTile>();
 
     private void Awake()
     {
@@ -27,12 +32,12 @@ public class WorldMap : MonoBehaviour
         _noiseMap = PerlinMap.GenerateNoiseMap(360, 360, 10 , 165, 4, 0.33f, 2.5f, (uint)OverworldMapData.Seed, Vector2.zero, false);
         _structures = new Grid<bool>(10, 10, 60, Vector3.zero, () => false, false);
         _overworldMapStructureGrid = new Grid<OverworldStructureCustomTile>(10, 10, 60, Vector3.zero, () => default, false);
-        //_structurePosition = FindStructurePosition(CheckForSuitableDungeonTile());
         DrawTexture();
-        SpawnDungeonIcon();
+        
         CheckForSuitableDungeonTile();
-        Display();
-     
+        _possibleStructureDict = FilterAwaySeaTiles();
+        _chosenStructuresDict = FindStructurePosition(_possibleStructureDict, 5);
+        SpawnDungeonIcons();
     }
 
     /// <summary>
@@ -81,7 +86,6 @@ public class WorldMap : MonoBehaviour
             for (int z = 0; z < _overworldMapStructureGrid.GetHeight(); z++)
             {
                 int water = 0, grass = 0, mountain = 0, total = 0;
-                //float waterp, grassp, mountainp;
                 
                 for (int i = x * 36; i < (x + 1) * 36; i++) // currently 36 is the hard coded size difference between the underlying perlin noise and the structure grid
                 {
@@ -96,19 +100,13 @@ public class WorldMap : MonoBehaviour
                         {
                             mountain++;
                         }
-                        else/* if (_noiseMap.GetGridObject(i, j) < 0.8 && _noiseMap.GetGridObject(i, j) > 0.4)*/
+                        else
                         {
                             grass++;
-                        }
-                       
-                        
+                        }        
                     }
                 }
-                /*waterp = water / total;
-                mountainp = mountain / total;
-                grassp = grass / total;*/
                 OverworldStructureCustomTile current = new OverworldStructureCustomTile(total, grass, mountain, water);
-
                 _overworldMapStructureGrid.SetGridObject(x, z, current);
 
             }
@@ -120,16 +118,54 @@ public class WorldMap : MonoBehaviour
     /// </summary>
     /// <param name="inputList">List to pick a random element out of</param>
     /// <returns>The randomly picked vector 2</returns>
-    private Vector2 FindStructurePosition(List<Vector2> inputList)
+    private Dictionary<Vector2, OverworldStructureCustomTile> FindStructurePosition(Dictionary<Vector2, OverworldStructureCustomTile> inputDict, int numberOfDungeons = 1)
     {
-        return inputList[Random.Range(0, inputList.Count)];
+        List<Vector2> keyList = new List<Vector2>(inputDict.Keys);
+        Dictionary<Vector2, OverworldStructureCustomTile> returnDict = new Dictionary<Vector2, OverworldStructureCustomTile>();
+
+        for (int i = 0; i < numberOfDungeons; i++)
+        {
+
+            Vector2 currKey = keyList[Random.Range(0, keyList.Count)];
+            returnDict.Add(currKey, inputDict[currKey]);
+            keyList.Remove(currKey);
+        }
+        return returnDict;
     }
 
-    private void SpawnDungeonIcon()
+    private void SpawnDungeonIcons()
     {
-        Instantiate(Dung, new Vector3(_structurePosition.x * 60 + 25 , 1, _structurePosition.y * 60 + 25), Quaternion.Euler(0, 180, 0));
-    }
+        int index = 0;
 
+        foreach (var dungeon in _chosenStructuresDict)
+        {
+            
+
+            string gameObjectName = "Dungeon " + index;
+            string sceneName = "Dungeon_" + index;
+
+            GameObject Dungeon_1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            Dungeon_1.name =  gameObjectName;
+            Dungeon_1.transform.position = new Vector3(dungeon.Key.x * 60 + 30, 1, dungeon.Key.y * 60 + 30);
+            Dungeon_1.transform.localScale = new Vector3(6, 1, 6);
+            Dungeon_1.transform.rotation = Quaternion.Euler(0, 180, 0);
+            
+            if (dungeon.Value.GetWaterProportion() > 0) {
+                Dungeon_1.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/CoastalDungeonIcon");
+            } else if (dungeon.Value.GetMountainProportion() > 0){
+                Dungeon_1.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/MountainDungeonIcon");
+            } else Dungeon_1.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/StandardDungeonIcon");
+            
+            Dungeon_1.AddComponent<DungeonIcon>();
+            var Icon = Dungeon_1.GetComponent<DungeonIcon>();
+            Icon.SceneName = sceneName;
+
+            
+            
+            index++;
+        } 
+         
+    }
 
 
 
@@ -141,23 +177,27 @@ public class WorldMap : MonoBehaviour
         public Color colour;
     }
 
-    
-    public void Display()
+
+
+    private Dictionary<Vector2, OverworldStructureCustomTile> FilterAwaySeaTiles()
     {
-        
-        
+        Dictionary<Vector2, OverworldStructureCustomTile> filteredDict = new Dictionary<Vector2, OverworldStructureCustomTile>();
+
+
         for (int x = 0; x < _overworldMapStructureGrid.GetWitdth(); x++)
         {
             for (int z = 0; z < _overworldMapStructureGrid.GetHeight(); z++)
             {
-                Debug.Log(_overworldMapStructureGrid.GetGridObject(x, z).GetTotal());
-                Debug.Log("At (" + x + ", " + z + ") the water is" + _overworldMapStructureGrid.GetGridObject(x, z).GetWaterPorportion() +
-                    " the grass is " + _overworldMapStructureGrid.GetGridObject(x, z).GetGrassPorportion() + " and mountain is " +
-                    _overworldMapStructureGrid.GetGridObject(x, z).GetMountainPorportion());
+                if (_overworldMapStructureGrid.GetGridObject(x, z).GetWaterProportion() < 0.3)
+                {
+
+                    filteredDict.Add(new Vector2(x, z), _overworldMapStructureGrid.GetGridObject(x, z));
+                    
+
+                } 
             }
         }
-        
+        return filteredDict;
     }
-
 
 }

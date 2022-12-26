@@ -3,11 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class DungeonIcon : MonoBehaviour
 {
-    public OverworldMapData OverworldMapData;
-    public DungeonInstanceData DungeonInstanceData;
-    
     Renderer _meshRenderer;
     Color _originalColor;
+
+    public string SceneName;
     
     private void Awake()
     {
@@ -25,6 +24,6 @@ public class DungeonIcon : MonoBehaviour
     }
     private void OnMouseUp()
     {
-        SceneManager.LoadScene(OverworldMapData.D1InternalName);
+        SceneManager.LoadScene(SceneName);
     }
 }
