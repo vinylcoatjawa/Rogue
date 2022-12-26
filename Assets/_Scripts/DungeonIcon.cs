@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/// <summary>
+/// Script adding functionality to the dungeon icons spawned on the main map screen
+/// </summary>
 public class DungeonIcon : MonoBehaviour
 {
     Renderer _meshRenderer;
