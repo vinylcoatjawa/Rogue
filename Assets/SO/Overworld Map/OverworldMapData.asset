@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ade602c3474d11b448a4036c36645177, type: 3}
+  m_Name: OverworldMapData
+  m_EditorClassIdentifier: 
+  Seed: -1825243312
+  mapName: 
+  Dungeon_0_name: abc
+  Dungeon_0_seed: 0
+  Dungeon_0_icon_type: 
+  Dungeon_1_name: vabc
+  Dungeon_1_seed: 0
+  Dungeon_1_icon_type: 
+  Dungeon_2_name: abc
+  Dungeon_2_seed: 0
+  Dungeon_2_icon_type: 
+  Dungeon_3_name: abc
+  Dungeon_3_seed: 0
+  Dungeon_3_icon_type: 
+  Dungeon_4_name: abc
+  Dungeon_4_seed: 0
+  Dungeon_4_icon_type: 

@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/// <summary>
+/// Script adding functionality to the dungeon icons spawned on the main map screen
+/// </summary>
 public class DungeonIcon : MonoBehaviour
 {
-    public OverworldMapData OverworldMapData;
-    
     Renderer _meshRenderer;
     Color _originalColor;
+
+    public string SceneName;
     
     private void Awake()
     {
@@ -24,6 +26,6 @@ public class DungeonIcon : MonoBehaviour
     }
     private void OnMouseUp()
     {
-        SceneManager.LoadScene(OverworldMapData.D1InternalName);
+        SceneManager.LoadScene(SceneName);
     }
 }
