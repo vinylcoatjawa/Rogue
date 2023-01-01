@@ -24,7 +24,7 @@ public class WorldMap : MonoBehaviour
     private void Start()
     {
         _noiseMap = PerlinMap.GenerateNoiseMap(360, 360, 10 , 165, 4, 0.33f, 2.5f, (uint)OverworldMapData.Seed, Vector2.zero, false);
-        _overworldMapStructureGrid = new Grid<OverworldStructureCustomTile>(10, 10, 60, Vector3.zero, () => default, false);
+        _overworldMapStructureGrid = new Grid<OverworldStructureCustomTile>(10, 10, 60, Vector3.zero, () => new OverworldStructureCustomTile(0, 0, 0, 0), false);
         DrawTexture(); // Draws the map       
         PopulateStrucureGrid();
         _possibleStructureDict = FilterAwaySeaTiles();
