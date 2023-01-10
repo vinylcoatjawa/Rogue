@@ -9,7 +9,7 @@ using UnityEngine;
         // Default orientation X-Z axis with X being the width and Z being the height
         private int _width;
         private int _height;
-        private float _cellSize;
+        private int _cellSize;
         private Vector3 _originPosition;
         private bool _allowDebug;
         private TGridObject[,] _gridArray;
@@ -24,7 +24,7 @@ using UnityEngine;
         /// <param name="cellSize">Sizelength of the quadratic gridpositions</param>
         /// <param name="originPosition">Coordinates of the bottom-leftmost gridcells position</param>
         /// <param name="createGridObject">Default grid object needed to initialize the Grid</param>
-        public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<TGridObject> createGridObject, bool allowDebug)
+        public Grid(int width, int height, int cellSize, Vector3 originPosition, Func<TGridObject> createGridObject, bool allowDebug)
         {
             this._width = width;
             this._height = height;
@@ -53,7 +53,7 @@ using UnityEngine;
                 {
                     for (int z = 0; z < _height; z++)
                     {
-                        _debugTestArray[x, z] = CreateWorldText(_gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + middleOffset, (int)_cellSize, Color.black, TextAnchor.MiddleCenter);
+                        _debugTestArray[x, z] = CreateWorldText(_gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + middleOffset, _cellSize, Color.black, TextAnchor.MiddleCenter);
                         _debugTestArray[x, z].gameObject.transform.SetParent(debugGrid.transform);
 
                         Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.black, 100f);

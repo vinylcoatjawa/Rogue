@@ -12,7 +12,7 @@ public class OverWorldMapDisplay : MonoBehaviour
     public DrawMode CurrentDrawMode;
     public int Height = 60;
     public int Width = 60;
-    public float CellSize = 10f;
+    public int CellSize = 10;
     public float Scale;
     public int Octaves;
     [Range(0,1)]

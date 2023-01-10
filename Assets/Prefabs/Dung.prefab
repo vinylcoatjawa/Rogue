@@ -111,5 +111,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f023b05cd190b40aa3273c2de4a3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OverworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}
-  DungeonInstanceData: {fileID: 11400000, guid: 27ab162c43e7064439d7026cfedb7bfd, type: 2}
+  SceneName: 

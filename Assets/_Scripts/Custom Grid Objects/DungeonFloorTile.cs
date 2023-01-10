@@ -16,7 +16,7 @@ public class DungeonFloorTile
         _isWalkable = true;
     }
 
-    public bool AmIWalkable(){
+    public bool IsWalkable(){
         return _isWalkable;
     }
 

@@ -15,7 +15,7 @@ public class PerlinMap
     /// <param name="seed"></param>
     /// <param name="offset"></param>
     /// <returns>A grid of floats based on Perlin noise</returns>
-    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, float cellSize, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset, bool allowDebug = false)
+    public static Grid<float> GenerateNoiseMap(int mapWidth, int mapHeight, int cellSize, float scale, int octaves, float persistance, float lacunarity, uint seed, Vector2 offset, bool allowDebug = false)
     {
         Grid<float> noiseMap = new Grid<float>(mapWidth, mapHeight, cellSize, Vector3.zero, () => 0f, allowDebug);
         Noise noise = new Noise();
