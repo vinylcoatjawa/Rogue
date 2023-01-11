@@ -22,25 +22,27 @@ public class DungeonInstance : MonoBehaviour
     int _middleCellX;
     int _middleCellZ;
     int _offset;
+    int _dungeonFloorTileCount = 700;
     Vector3Int _gridOriginPosition;
-    Grid<DungeonFloorTile> _floorTiles;
     List<Vector3Int> _walkablbes;
+    Grid<DungeonFloorTile> _floorTiles;
     CardinalDirection cardinalDirection;
     Noise _noise;
+    Mesh _floormesh;
     int _dungeonSeed;
     string _thisDungeonInstance;
 
     
     private void Awake()
     {
-       
+
         _noise = new Noise();
         _middleCellX = _width / 2;
         _middleCellZ = _height / 2;
         _offset = _cellSize / 2;
         _gridOriginPosition = new Vector3Int( -_middleCellX  * _cellSize, 0, -_middleCellZ * _cellSize); // this is the world pos of the grids lower left corner so that 0,0 in world space ends up in the middle 
         _walkablbes = new List<Vector3Int>();
-        _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, () => new DungeonFloorTile(_floorTiles, _width, _height), true);
+        _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, () => new DungeonFloorTile(_floorTiles, _width, _height), false);
         _thisDungeonInstance = SceneManager.GetActiveScene().name;
         _dungeonSeed = (int)OverworldMapData.GetType().GetField(_thisDungeonInstance + "_seed").GetValue(OverworldMapData);
     }
@@ -48,27 +50,103 @@ public class DungeonInstance : MonoBehaviour
     
     void Start()
     {
+        _floormesh = new Mesh();
         DLA();
-        DisplayWalkables();
+        //DisplayWalkables();
         Debug.Log(_thisDungeonInstance);
+        GeneratFloorMesh();
     }
 
+    void GeneratFloorMesh(){
+        //if (GetComponent<MeshFilter>() == null) _floormesh = gameObject.AddComponent<MeshFilter>().mesh = _floormesh;
+        GetComponent<MeshFilter>().mesh = _floormesh; 
+        Renderer rend = GetComponent<MeshRenderer>();
+        
+        MeshUtils.CreateEmptyMeshArrays(_dungeonFloorTileCount, out Vector3[] vertices, out Vector2[] uvs, out int[] triangles);
+        Vector3 quadSize = new Vector3(1,1) * _cellSize;
+        Vector2 uv00 = Vector2.zero;
+        Vector2 uv11 = Vector2.one;
+        
 
+        Debug.Log($"vertices: {vertices.Count()} and uvs: {uvs.Count()} and triangles: {triangles.Count()}");
+        
+        int index = 0;
+        
+        for (int x = 0; x < _floorTiles.GetWitdth(); x++)
+        {
+            for (int z = 0; z < _floorTiles.GetHeight(); z++)
+            {
+                
+                if (_floorTiles.GetGridObject(x, z).IsWalkable()){
+                //int index = x * _floorTiles.GetHeight() + z;
+                Vector3 pos = _floorTiles.GetWorldPosition(x, z);
+                          
+                Debug.Log($"({x}, {z}) is walkable with index: {index} and at {pos}");
+
+                int vIndex = index*4;
+                int vIndex0 = vIndex;
+                int vIndex1 = vIndex+1;
+                int vIndex2 = vIndex+2;
+                int vIndex3 = vIndex+3;
+
+
+                vertices[vIndex0] = pos + Vector3.zero;
+                vertices[vIndex1] = pos + new Vector3(0, 0, _cellSize);
+                vertices[vIndex2] = pos + new Vector3(_cellSize, 0, _cellSize);
+                vertices[vIndex3] = pos + new Vector3(_cellSize, 0, 0);
+
+                Debug.Log($"{vertices[vIndex0]} {vertices[vIndex1]} {vertices[vIndex2]} {vertices[vIndex3]}");
+                
+
+                uvs[vIndex0] = new Vector2(uv00.x, uv00.y) ;
+                uvs[vIndex1] = new Vector2(uv00.x, uv11.y) ;
+                uvs[vIndex2] = new Vector2(uv11.x, uv11.y) ;
+                uvs[vIndex3] = new Vector2(uv11.x, uv00.y) ;
+
+
+                int tIndex = index*6;
+
+                triangles[tIndex+0] = vIndex0;
+                triangles[tIndex+1] = vIndex1;
+                triangles[tIndex+2] = vIndex2;
+                
+                triangles[tIndex+3] = vIndex0;
+                triangles[tIndex+4] = vIndex2;
+                triangles[tIndex+5] = vIndex3;
+                
+                
+                index ++;
+
+                }
+
+
+            }
+        }
+
+        _floormesh.vertices = vertices;
+        _floormesh.uv = uvs;
+        _floormesh.triangles = triangles;
+        _floormesh.RecalculateNormals();
+        //Renderer rend = GetComponent<MeshRenderer>();
+        Material mat = Resources.Load<Material>("Materials/lowP/Vol_23_1_Rocks");
+        rend.material = mat;
+    }
 
 
 
     public void DLA(){
       
         SetMiddleWalkable();
-        for (int i = 0; i < 700; i++)
+        for (int i = 0; i < _dungeonFloorTileCount; i++)
         {
-            Vector3Int currentSelection = SelectRandomFromWalkableList(_walkablbes, (uint)i, (uint)_dungeonSeed);
-            cardinalDirection = PickAxis((uint)i, (uint)_dungeonSeed);
+            cardinalDirection = PickAxis(i, _dungeonSeed);
+            Vector3Int currentSelection = SelectRandomFromWalkableList(_walkablbes, i, _dungeonSeed);
             Expand(currentSelection, cardinalDirection);
         }
         
         
     }
+
 
 private void DisplayWalkables(){
     for (int x = 0; x < _floorTiles.GetWitdth(); x++)
@@ -102,8 +180,8 @@ private void Expand(Vector3Int currentGridTile, CardinalDirection direction)
                 }
                 else break;
             case CardinalDirection.East:
-                farthest = new Vector3Int(_walkablbes.Where(v => v.z == currentGridTile.z).Max(v => v.x), 0, currentGridTile.z);
-                choiceGridPos = new Vector3Int(farthest.x + 1, 0, farthest.z);
+                farthest = new Vector3Int(_walkablbes.Where(v => v.z == currentGridTile.z).Max(v => v.x), 0, currentGridTile.z); // finding the eastmost walkable
+                choiceGridPos = new Vector3Int(farthest.x + 1, 0, farthest.z); // selecting the one east from it
                 if(_floorTiles.GetGridObject(choiceGridPos.x, choiceGridPos.z) != null) {
                 _walkablbes.Add(choiceGridPos);
                 _floorTiles.GetGridObject(choiceGridPos.x, choiceGridPos.z).SetTileWalkable();
@@ -111,8 +189,8 @@ private void Expand(Vector3Int currentGridTile, CardinalDirection direction)
                 }
                 else break;
             case CardinalDirection.South:
-                farthest =  new Vector3Int(currentGridTile.x, 0, _walkablbes.Where(v => v.x == currentGridTile.x).Min(v => v.z));
-                choiceGridPos = new Vector3Int(farthest.x, 0, farthest.z - 1);
+                farthest =  new Vector3Int(currentGridTile.x, 0, _walkablbes.Where(v => v.x == currentGridTile.x).Min(v => v.z)); // finding the southmost walkable
+                choiceGridPos = new Vector3Int(farthest.x, 0, farthest.z - 1); // selecting the one south from it
                 if(_floorTiles.GetGridObject(choiceGridPos.x, choiceGridPos.z) != null) {
                 _walkablbes.Add(choiceGridPos);
                 _floorTiles.GetGridObject(choiceGridPos.x, choiceGridPos.z).SetTileWalkable();
@@ -120,15 +198,15 @@ private void Expand(Vector3Int currentGridTile, CardinalDirection direction)
                 }
                 else break;
             case CardinalDirection.West:
-                farthest = new Vector3Int(_walkablbes.Where(v => v.z == currentGridTile.z).Min(v => v.x), 0, currentGridTile.z);
-                choiceGridPos = new Vector3Int(farthest.x - 1, 0, farthest.z);
+                farthest = new Vector3Int(_walkablbes.Where(v => v.z == currentGridTile.z).Min(v => v.x), 0, currentGridTile.z); // finding the westmost walkable
+                choiceGridPos = new Vector3Int(farthest.x - 1, 0, farthest.z); // selecting the one west from it
                 if(_floorTiles.GetGridObject(choiceGridPos.x, choiceGridPos.z) != null) {
                 _walkablbes.Add(choiceGridPos);
                 _floorTiles.GetGridObject(choiceGridPos.x, choiceGridPos.z).SetTileWalkable();
                 break;
                 }
                 else break;
-            default: Debug.Log("Something went wrong with cardinal directions, we return (0,0,0)"); break;
+            default: Debug.Log("Something went wrong with cardinal directions"); break;
         }
     }
 
@@ -137,21 +215,20 @@ private void Expand(Vector3Int currentGridTile, CardinalDirection direction)
         _walkablbes.Add(new Vector3Int(_middleCellX, 0, _middleCellZ));
     }
 
-    private CardinalDirection PickAxis(uint position, uint seed)
+    private CardinalDirection PickAxis(int position, int seed)
     {
-        int enumKey = (int)_noise.NoiseInRange(0, 4, position, seed);
+        int enumKey = _noise.IntNoiseInRange(0, 4, position, seed);
         return (CardinalDirection)enumKey;
     }
 
 
     
 
-    private Vector3Int SelectRandomFromWalkableList(List<Vector3Int> walkables, uint index, uint seed){
+    private Vector3Int SelectRandomFromWalkableList(List<Vector3Int> walkables, int index, int seed){
         Vector3Int tile;
         
         int length = walkables.Count;
-        int tileIndex = (int)_noise.NoiseInRange(0, (uint)length, (uint)index, (uint)seed);
-        //int index = Random.Range(0, length);
+        int tileIndex = _noise.IntNoiseInRange(0, length, index, seed);
         tile = walkables[tileIndex];
         return tile;
     }

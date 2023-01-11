@@ -4,9 +4,6 @@ using UnityEngine;
 public class MeshTesting : MonoBehaviour
 {
     Mesh _mesh;
-    // Vector3[] _vertices;
-    // Vector2[] _uvs;
-    // int[] _triangles;
     MeshFilter meshFilter;
 
     int gridHeight = 5, gridWidth = 5, cellSize = 10;
@@ -31,12 +28,7 @@ public class MeshTesting : MonoBehaviour
                 int index = x * gridHeight + z;
                 
                 Vector3 pos = testGrid.GetWorldPosition(x, z);
-                Debug.Log($"currently on index: {index} and wp is: {testGrid.GetWorldPosition(x, z)}");
-                //MeshUtils.AddToMeshArraysV2(vertices, uvs, triangles, index, testGrid.GetWorldPosition(x, z), 0f, quadSize, new Vector2(0,0), new Vector2(1,1));
-                //MeshUtils.AddToMeshArraysV2(vertices, uvs, triangles, index, testGrid.GetWorldPosition(x, z), 0f, quadSize, new Vector2(0,0), new Vector2(1,1));
-                //Debug.Log($"vertices: {vertices[index]}, uvs: {uvs[index]} and triangles: {triangles[index]}");
-                
-                
+                          
                 int vIndex = index*4;
                 int vIndex0 = vIndex;
                 int vIndex1 = vIndex+1;
@@ -71,7 +63,6 @@ public class MeshTesting : MonoBehaviour
 
         
         _mesh.vertices = vertices;
-        Debug.Log($"mesh vertices 0 - 3: {_mesh.vertices[0]}, {_mesh.vertices[1]}, {_mesh.vertices[2]}, {_mesh.vertices[3]}");
         _mesh.uv = uvs;
         _mesh.triangles = triangles;
         _mesh.RecalculateNormals();

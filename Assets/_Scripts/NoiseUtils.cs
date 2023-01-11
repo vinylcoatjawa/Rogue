@@ -134,6 +134,35 @@ namespace NoiseUtils
         {
             return Get1DNoiseZeroToOne(posX + (_prime * posY), seed);
         }
+
+
+                            /* INTEGER VALUES */
+
+
+        public int Get1DNoiseInt(int position, int seed)
+        {
+            uint uintPos = (uint)position;
+            uint uintSeed = (uint)seed;
+
+            uint mangled = uintPos;
+            mangled *= _noise1;
+            mangled += uintSeed;
+            mangled ^= (mangled << 8);
+            mangled += _noise2;
+            mangled ^= (mangled >> 8);
+            mangled *= _noise3;
+            mangled ^= (mangled << 8);
+
+            return (int)mangled;
+        }
+
+
+        public int IntNoiseInRange(int rangeFrom, int rangeTo, int position, int seed)
+        {
+            uint mangled = Get1DNoiseUint((uint)position, (uint)seed);
+            return (int)(rangeFrom + mangled % (rangeTo - rangeFrom));
+        }
+
     }
 }
 
