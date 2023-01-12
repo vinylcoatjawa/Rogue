@@ -28,7 +28,8 @@ public class DungeonInstance : MonoBehaviour
     Grid<DungeonFloorTile> _floorTiles;
     CardinalDirection cardinalDirection;
     Noise _noise;
-    Mesh _floormesh;
+    Mesh _floorMesh;
+    Mesh _wallMesh;
     int _dungeonSeed;
     string _thisDungeonInstance;
 
@@ -50,25 +51,32 @@ public class DungeonInstance : MonoBehaviour
     
     void Start()
     {
-        _floormesh = new Mesh();
+        _floorMesh = new Mesh();
+        _wallMesh = new Mesh();
         DLA();
         //DisplayWalkables();
         Debug.Log(_thisDungeonInstance);
         GeneratFloorMesh();
+        //Debug.Log($"{_floorMesh.vertices.Count()}");
+        AddWalls();
+        //GeneratWallMesh();
+
     }
 
+    
+
     void GeneratFloorMesh(){
-        //if (GetComponent<MeshFilter>() == null) _floormesh = gameObject.AddComponent<MeshFilter>().mesh = _floormesh;
-        GetComponent<MeshFilter>().mesh = _floormesh; 
+        //if (GetComponent<MeshFilter>() == null) _floorMesh = gameObject.AddComponent<MeshFilter>().mesh = _floorMesh;
+        GetComponent<MeshFilter>().mesh = _floorMesh; 
         Renderer rend = GetComponent<MeshRenderer>();
         
         MeshUtils.CreateEmptyMeshArrays(_dungeonFloorTileCount, out Vector3[] vertices, out Vector2[] uvs, out int[] triangles);
-        Vector3 quadSize = new Vector3(1,1) * _cellSize;
+        //Vector3 quadSize = new Vector3(1,1) * _cellSize;
         Vector2 uv00 = Vector2.zero;
         Vector2 uv11 = Vector2.one;
         
 
-        Debug.Log($"vertices: {vertices.Count()} and uvs: {uvs.Count()} and triangles: {triangles.Count()}");
+        //Debug.Log($"vertices: {vertices.Count()} and uvs: {uvs.Count()} and triangles: {triangles.Count()}");
         
         int index = 0;
         
@@ -81,7 +89,7 @@ public class DungeonInstance : MonoBehaviour
                 //int index = x * _floorTiles.GetHeight() + z;
                 Vector3 pos = _floorTiles.GetWorldPosition(x, z);
                           
-                Debug.Log($"({x}, {z}) is walkable with index: {index} and at {pos}");
+                //Debug.Log($"({x}, {z}) is walkable with index: {index} and at {pos}");
 
                 int vIndex = index*4;
                 int vIndex0 = vIndex;
@@ -95,7 +103,7 @@ public class DungeonInstance : MonoBehaviour
                 vertices[vIndex2] = pos + new Vector3(_cellSize, 0, _cellSize);
                 vertices[vIndex3] = pos + new Vector3(_cellSize, 0, 0);
 
-                Debug.Log($"{vertices[vIndex0]} {vertices[vIndex1]} {vertices[vIndex2]} {vertices[vIndex3]}");
+                //Debug.Log($"{vertices[vIndex0]} {vertices[vIndex1]} {vertices[vIndex2]} {vertices[vIndex3]}");
                 
 
                 uvs[vIndex0] = new Vector2(uv00.x, uv00.y) ;
@@ -123,10 +131,10 @@ public class DungeonInstance : MonoBehaviour
             }
         }
 
-        _floormesh.vertices = vertices;
-        _floormesh.uv = uvs;
-        _floormesh.triangles = triangles;
-        _floormesh.RecalculateNormals();
+        _floorMesh.vertices = vertices;
+        _floorMesh.uv = uvs;
+        _floorMesh.triangles = triangles;
+        _floorMesh.RecalculateNormals();
         //Renderer rend = GetComponent<MeshRenderer>();
         Material mat = Resources.Load<Material>("Materials/lowP/Vol_23_1_Rocks");
         rend.material = mat;
@@ -148,19 +156,97 @@ public class DungeonInstance : MonoBehaviour
     }
 
 
-private void DisplayWalkables(){
-    for (int x = 0; x < _floorTiles.GetWitdth(); x++)
+private void AddWalls(){
+    int wallQuadCount = 0;
+
+        for (int x = 0; x < _floorTiles.GetWitdth(); x++)
         {
             for (int z = 0; z < _floorTiles.GetHeight(); z++)
             {
-                if(_floorTiles.GetGridObject(x,z).IsWalkable()) {
-                     Vector3 worldPos = _floorTiles.GetWorldPosition(x, z, 0) + new Vector3(_offset, 0, _offset);
-                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                     cube.transform.position = worldPos;
-                     cube.transform.localScale = new Vector3(10, 0, 10);
-                }
+                DungeonFloorTile curr = _floorTiles.GetGridObject(x, z);
+                
+                if(_floorTiles.GetGridObject(x + 1, z) != null && !_floorTiles.GetGridObject(x + 1, z).IsWalkable()) { wallQuadCount++; curr._hasWallNorth = true; } 
+                if(_floorTiles.GetGridObject(x, z + 1) != null && !_floorTiles.GetGridObject(x, z + 1).IsWalkable()) { wallQuadCount++; curr._hasWallEast = true; } 
+                if(_floorTiles.GetGridObject(x - 1, z) != null && !_floorTiles.GetGridObject(x - 1, z).IsWalkable()) { wallQuadCount++; curr._hasWallSouth = true; } 
+                if(_floorTiles.GetGridObject(x, z - 1) != null && !_floorTiles.GetGridObject(x, z - 1).IsWalkable()) { wallQuadCount++; curr._hasWallWest = true; } 
             }
         }
+        Vector3[] vertices = _floorMesh.vertices;
+        Vector2[] uvs = _floorMesh.uv;
+        int[] triangles = _floorMesh.triangles;
+
+        Array.Resize(ref vertices, (_dungeonFloorTileCount + wallQuadCount) * 4);
+        Array.Resize(ref uvs, (_dungeonFloorTileCount + wallQuadCount) * 4);
+        Array.Resize(ref triangles, (_dungeonFloorTileCount + wallQuadCount) * 6);
+
+
+        GetComponent<MeshFilter>().mesh = _floorMesh; 
+        Renderer rend = GetComponent<MeshRenderer>();
+
+        int index = 0;
+
+
+         
+
+        Vector2 uv00 = Vector2.zero;
+        Vector2 uv11 = Vector2.one;
+
+        for (int x = 0; x < 1/*_floorTiles.GetWitdth()*/; x++)
+        {
+            for (int z = 0; z < 1/*_floorTiles.GetHeight()*/; z++)
+            {
+                Debug.Log($" {x} and {z} has {_floorTiles.GetGridObject(x, z)._hasWallNorth}");
+                if(_floorTiles.GetGridObject(x, z)._hasWallNorth){
+                    Vector3 pos = _floorTiles.GetWorldPosition(x, z);
+                          
+                //Debug.Log($"({x}, {z}) is walkable with index: {index} and at {pos}");
+
+                    int vIndex = index*4;
+                    int vIndex0 = vIndex;
+                    int vIndex1 = vIndex+1;
+                    int vIndex2 = vIndex+2;
+                    int vIndex3 = vIndex+3;
+
+
+                    vertices[vIndex0] = pos + new Vector3(0, 0, _cellSize);//pos + Vector3.zero;
+                    vertices[vIndex1] = pos + new Vector3(0, _cellSize * 2, _cellSize);//pos + new Vector3(0, 0, _cellSize);
+                    vertices[vIndex2] = pos + new Vector3(_cellSize, _cellSize * 2, _cellSize);
+                    vertices[vIndex3] = pos + new Vector3(_cellSize, 0, _cellSize);
+
+                    //Debug.Log($"{vertices[vIndex0]} {vertices[vIndex1]} {vertices[vIndex2]} {vertices[vIndex3]}");
+                    
+
+                    uvs[vIndex0] = new Vector2(uv00.x, uv00.y) ;
+                    uvs[vIndex1] = new Vector2(uv00.x, uv11.y) ;
+                    uvs[vIndex2] = new Vector2(uv11.x, uv11.y) ;
+                    uvs[vIndex3] = new Vector2(uv11.x, uv00.y) ;
+
+
+                    int tIndex = index*6;
+
+                    triangles[tIndex+0] = vIndex0;
+                    triangles[tIndex+1] = vIndex1;
+                    triangles[tIndex+2] = vIndex2;
+                    
+                    triangles[tIndex+3] = vIndex0;
+                    triangles[tIndex+4] = vIndex2;
+                    triangles[tIndex+5] = vIndex3;
+                    
+                    
+                    index ++;
+                }
+            }
+
+        _floorMesh.vertices = vertices;
+        _floorMesh.uv = uvs;
+        _floorMesh.triangles = triangles;
+        _floorMesh.RecalculateNormals();
+        //Renderer rend = GetComponent<MeshRenderer>();
+        Material mat = Resources.Load<Material>("Materials/lowP/Vol_23_1_Rocks");
+        rend.material = mat;
+        }
+
+
 }
 
 private void Expand(Vector3Int currentGridTile, CardinalDirection direction)
