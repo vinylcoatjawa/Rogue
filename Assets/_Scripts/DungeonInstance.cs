@@ -58,7 +58,7 @@ public class DungeonInstance : MonoBehaviour
         Debug.Log(_thisDungeonInstance);
         GeneratFloorMesh();
         //Debug.Log($"{_floorMesh.vertices.Count()}");
-        AddWalls();
+        //AddWalls();
         //GeneratWallMesh();
 
     }

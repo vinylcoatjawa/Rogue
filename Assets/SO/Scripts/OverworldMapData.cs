@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 using UnityEngine;
-[CreateAssetMenu(fileName = "OverworldMapData", menuName = "Overworld/Map/OverworldMapData")]
+[CreateAssetMenu(fileName = "OverworldMapData", menuName = "SO/Overworld/Map/OverworldMapData")]
 /// <summary>
 /// SO to hold data about the overworld map and the dungeons found on it
 /// </summary>
