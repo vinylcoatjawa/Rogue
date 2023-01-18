@@ -17,7 +17,9 @@ public class DungeonMeshTest : MonoBehaviour
         _height = DungeonFloorGridData.GridHeight;
         _cellSize = DungeonFloorGridData.CellSize;
         _mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = _mesh;
+        //GetComponent<MeshFilter>().mesh = _mesh;
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshFilter.sharedMesh = _mesh;
         _rend = GetComponent<MeshRenderer>();
         _dungTiles = new Grid<DungeonFloorTile>(_width, _height, _cellSize, Vector3.zero, () => new DungeonFloorTile(_dungTiles, _width, _height), true);
     }
@@ -40,7 +42,7 @@ public class DungeonMeshTest : MonoBehaviour
                 
                 Vector3 pos = _dungTiles.GetWorldPosition(x, z);
 
-                Debug.Log($"world pos: {pos} for ({x}, {z})");
+                //Debug.Log($"world pos: {pos} for ({x}, {z})");
 
                 int vIndex = index*4;
                 int vIndex0 = vIndex;
@@ -71,15 +73,15 @@ public class DungeonMeshTest : MonoBehaviour
                 triangles[tIndex+4] = vIndex2;
                 triangles[tIndex+5] = vIndex3;
 
-                Debug.Log($"index is: {index} and  v1 is: {vertices[vIndex0]}, v2 is: {vertices[vIndex1]}");
+                //Debug.Log($"index is: {index} and  v1 is: {vertices[vIndex0]}, v2 is: {vertices[vIndex1]}");
 
             }
         }
 
-        Debug.Log($"{_mesh} and {vertices.Length}");
+        //Debug.Log($"{_mesh} and {vertices.Length}");
         
         _mesh.vertices = vertices;
-        Debug.Log("hej");
+        //Debug.Log("hej");
         _mesh.uv = uvs;
         _mesh.triangles = triangles;
         _mesh.RecalculateNormals();

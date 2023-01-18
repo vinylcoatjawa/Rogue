@@ -4,7 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(DungeonMeshTest))]
 public class DungeonMeshEditor : Editor
 {
-    /*
+    
     public override void OnInspectorGUI()
     {
 
@@ -24,7 +24,8 @@ public class DungeonMeshEditor : Editor
 
         }
     }
-    */
+    
+    /*
     void OnSceneGUI()
     {
 
@@ -38,7 +39,7 @@ public class DungeonMeshEditor : Editor
         }
         else return;
         
-        /*
+        
         base.OnInspectorGUI();
 
         if (GUILayout.Button("Data Init"))
@@ -52,6 +53,6 @@ public class DungeonMeshEditor : Editor
             dungeonMeshTest.GenerateMesh();
 
         }
-        */
-    }
+        
+    }*/
 }
