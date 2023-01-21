@@ -28,22 +28,30 @@ public class DungeonInstance : MonoBehaviour
     Vector3Int _gridOriginPosition;
     List<Vector3Int> _walkablbes;
     Grid<DungeonFloorTile> _floorTiles;
+    Grid<GameObject> _movementGrid;
     CardinalDirection cardinalDirection;
     Noise _noise;
     Mesh _floorMesh;
     int _dungeonSeed;
     string _thisDungeonInstance;
+    MeshCollider _floorMeshCollider;
+    
 
     
     void Awake(){
+        
         Init();
+        Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);
     }
 
     
     void Start(){
+        
         DLA();      
         GeneratFloorMesh();
-        Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);
+        _floorMeshCollider = gameObject.AddComponent<MeshCollider>();
+        _floorMeshCollider.sharedMesh = _floorMesh;
+        gameObject.tag = "FloorMesh";
     }
 
     
@@ -105,6 +113,7 @@ public class DungeonInstance : MonoBehaviour
         _floorMesh.RecalculateNormals();
         Material mat = Resources.Load<Material>("Materials/lowP/Vol_23_1_Rocks");
         rend.material = mat;
+        
     }
     /// <summary>
     /// Performs rudimentary DLA generation on a grid of possible floortiles
@@ -209,13 +218,27 @@ public class DungeonInstance : MonoBehaviour
     /// <param name="index">The position in the noise function</param>
     /// <param name="seed">The seed of the noise function</param>
     /// <returns></returns>
-    private Vector3Int SelectRandomFromWalkableList(List<Vector3Int> walkables, int index, int seed){
+    Vector3Int SelectRandomFromWalkableList(List<Vector3Int> walkables, int index, int seed){
         int length = walkables.Count;
         int tileIndex = _noise.IntNoiseInRange(0, length, index, seed);
         Vector3Int tile = walkables[tileIndex];
         return tile;
     }
 
+public void MousePos(){
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        int x, z;
+        Vector3 worldPos;// = Vector3.zero;
+        if (Physics.Raycast(ray, out RaycastHit raycastHit)){
+            //x = 0;
+            //z = 0;
+            worldPos = raycastHit.point;
+             _floorTiles.GetXY(worldPos, out x, out z);
+            Debug.Log($"({x}, {z}) is at {worldPos}");
+        }
+    }
+
+    
 
 
 #region SMOOTHING
@@ -263,19 +286,19 @@ public class DungeonInstance : MonoBehaviour
     }
 
     #endregion
-    public void TestingMouseInput(InputAction.CallbackContext context){
-        if(context.performed){
-            Debug.Log("clicked");
-            UpdateSurroundingWalkables();
-            SmoothTheMap();
-            GeneratFloorMesh();
-            Debug.Log("generated");
+    // public void TestingMouseInput(InputAction.CallbackContext context){
+    //     if(context.performed){
+    //         Debug.Log("clicked");
+    //         UpdateSurroundingWalkables();
+    //         SmoothTheMap();
+    //         GeneratFloorMesh();
+    //         Debug.Log("generated");
             
-        }
+    //     }
 
     
     
-    }
+    // }
         
 
 }

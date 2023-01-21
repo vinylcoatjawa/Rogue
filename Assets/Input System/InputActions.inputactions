@@ -15,9 +15,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Space",
+                    "name": "Move",
                     "type": "Button",
-                    "id": "3971d60b-aa05-4d33-b6d2-f06e6444fae1",
+                    "id": "9f07c728-91fc-49c4-9f97-c26f6d33daea",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -38,12 +38,12 @@
                 },
                 {
                     "name": "",
-                    "id": "ce7b024f-165e-408b-8c67-e96da0b9bb84",
-                    "path": "<Keyboard>/space",
+                    "id": "fa856516-6df2-4edc-9cd2-da5148361fec",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Space",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
