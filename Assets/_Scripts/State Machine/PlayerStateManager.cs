@@ -13,8 +13,8 @@ public class PlayerStateManager : MonoBehaviour
     void Start()
     {
         currentState = playerIdleState;
-
         currentState.EnterState(this);
+        OnPlayerStateChanged.Raise(currentState);
     }
 
     // Update is called once per frame

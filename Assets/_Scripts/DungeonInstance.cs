@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 using System.Linq;
 using UnityEngine.InputSystem;
 using NoiseUtils;
@@ -35,9 +33,13 @@ public class DungeonInstance : MonoBehaviour
     int _dungeonSeed;
     string _thisDungeonInstance;
     MeshCollider _floorMeshCollider;
+    PlayerBaseState _playerState;
+    int _floorMeshBitMask = 1 << 6;
+    int _x, _z;
+
+   //[SerializeField] private IntEvent onXCoordSelected;
     
 
-    
     void Awake(){
         
         Init();
@@ -46,12 +48,26 @@ public class DungeonInstance : MonoBehaviour
 
     
     void Start(){
-        
         DLA();      
         GeneratFloorMesh();
         _floorMeshCollider = gameObject.AddComponent<MeshCollider>();
         _floorMeshCollider.sharedMesh = _floorMesh;
         gameObject.tag = "FloorMesh";
+    }
+
+    void Update(){
+        switch (_playerState)
+        {
+            case PlayerIdleState:
+                break;
+            case PlayerPlanMoveState:
+            GetGridCoords();
+            //Debug.Log($"({_x}, {_z})");
+                break;
+            default:
+                Debug.Log("default");
+                break;
+        }
     }
 
     
@@ -225,20 +241,20 @@ public class DungeonInstance : MonoBehaviour
         return tile;
     }
 
-public void MousePos(){
+
+    void GetGridCoords(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        int x, z;
-        Vector3 worldPos;// = Vector3.zero;
-        if (Physics.Raycast(ray, out RaycastHit raycastHit)){
-            //x = 0;
-            //z = 0;
+        Vector3 worldPos;
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, _floorMeshBitMask)){
             worldPos = raycastHit.point;
-             _floorTiles.GetXY(worldPos, out x, out z);
-            Debug.Log($"({x}, {z}) is at {worldPos}");
-        }
+            _floorTiles.GetXY(worldPos, out _x, out _z);
+        }   
     }
 
-    
+    public void UpdateCurrentPlayerState(PlayerBaseState state){
+        _playerState = state;
+        Debug.Log(state);
+    }
 
 
 #region SMOOTHING
@@ -286,19 +302,7 @@ public void MousePos(){
     }
 
     #endregion
-    // public void TestingMouseInput(InputAction.CallbackContext context){
-    //     if(context.performed){
-    //         Debug.Log("clicked");
-    //         UpdateSurroundingWalkables();
-    //         SmoothTheMap();
-    //         GeneratFloorMesh();
-    //         Debug.Log("generated");
-            
-    //     }
 
-    
-    
-    // }
         
 
 }

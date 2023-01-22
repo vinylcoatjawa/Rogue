@@ -20,11 +20,15 @@ public class PlayerVCam : MonoBehaviour
         _vCam = GetComponent<CinemachineVirtualCamera>();
         _vCam.Follow = _player.transform;
         _vCam.LookAt = _player.transform;
+        
         _transposer = _vCam.AddCinemachineComponent<CinemachineTransposer>();
 
         _brain = GetComponent<CinemachineBrain>();
         
         _transposer.m_FollowOffset = new Vector3(35, 75, -35);
+        _transposer.m_XDamping = 0;
+        _transposer.m_YDamping = 0;
+        _transposer.m_ZDamping = 0;
     }
 
     // public void MousePos(){
