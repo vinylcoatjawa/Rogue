@@ -1,4 +1,4 @@
 /// <summary>
-/// Script to attach to listeners listening to Vecto3 type events
+/// Script to attach to listeners listening to int type events
 /// </summary>
 public class IntListener : BaseGameEventListener<int, IntEvent, UnityIntEvent> { }
