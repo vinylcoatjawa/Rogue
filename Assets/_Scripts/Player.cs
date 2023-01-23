@@ -24,14 +24,14 @@ public class Player : MonoBehaviour
     }
 
     private void SetPlayerIdle(InputAction.CallbackContext context){
-        playerStateManager.SwitchState(playerStateManager.playerIdleState);
+        playerStateManager.SwitchState(playerStateManager.PlayerIdleState);
     }
 
     void ClickOnPlayer(InputAction.CallbackContext context){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out RaycastHit raycastHit);
         if(raycastHit.transform != null && raycastHit.transform.gameObject.CompareTag("Player")){
-            playerStateManager.SwitchState(playerStateManager.playerPlanMoveState);
+            playerStateManager.SwitchState(playerStateManager.PlayerPlanMoveState);
         }
     }
     

@@ -4,29 +4,26 @@ using UnityEngine;
 
 public class PlayerStateManager : MonoBehaviour
 {
-    PlayerBaseState currentState;
+    PlayerBaseState _currentState;
     [SerializeField] private PlayerStateEvent OnPlayerStateChanged;
-    public PlayerIdleState playerIdleState = new PlayerIdleState();
-    public PlayerPlanMoveState playerPlanMoveState = new PlayerPlanMoveState();
+    public PlayerIdleState PlayerIdleState = new PlayerIdleState();
+    public PlayerPlanMoveState PlayerPlanMoveState = new PlayerPlanMoveState();
 
     // Start is called before the first frame update
     void Start()
     {
-        currentState = playerIdleState;
-        currentState.EnterState(this);
-        OnPlayerStateChanged.Raise(currentState);
+        _currentState = PlayerIdleState;
+        _currentState.EnterState(this);
+        OnPlayerStateChanged.Raise(_currentState);
+        //Debug.Log(_currentState);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void SwitchState(PlayerBaseState state){
-        currentState = state;
+        _currentState = state;
         state.EnterState(this);
-        OnPlayerStateChanged.Raise(currentState);
+        OnPlayerStateChanged.Raise(_currentState);
+        //Debug.Log(_currentState);
     }
 
   

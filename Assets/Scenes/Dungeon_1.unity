@@ -234,25 +234,17 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 93599301}
-        m_TargetAssemblyTypeName: PlayerVCam, Assembly-CSharp
-        m_MethodName: MousePos
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 43ded702-f288-4619-b3f2-d7fb4ffad02c
-    m_ActionName: InputForTesting/Mouse[/Mouse/leftButton]
-  - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 9f07c728-91fc-49c4-9f97-c26f6d33daea
     m_ActionName: InputForTesting/Move[/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4ab2af5e-1154-42c7-9ef6-186642cf83af
+    m_ActionName: InputForTesting/Leftclick[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2d894f6a-cbf7-4d48-96b8-deebd7394637
+    m_ActionName: InputForTesting/Rightclick[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: InputForTesting
@@ -320,6 +312,131 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &473932663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 473932666}
+  - component: {fileID: 473932665}
+  - component: {fileID: 473932664}
+  - component: {fileID: 473932667}
+  - component: {fileID: 473932668}
+  m_Layer: 0
+  m_Name: MovementIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &473932664
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473932663}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &473932665
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473932663}
+  m_Mesh: {fileID: 0}
+--- !u!4 &473932666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473932663}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &473932667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473932663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7508f7af0ac6d942bcc69427b3334ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 36dd19ec9892ff244b8fe0c77d8c514d, type: 2}
+  unityEvemtResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473932668}
+        m_TargetAssemblyTypeName: MovementIndicator, Assembly-CSharp
+        m_MethodName: FindLowerLeftVertice
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &473932668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473932663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60556d2104a277347858fb511f6f8acb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &885024713
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +451,7 @@ GameObject:
   - component: {fileID: 885024716}
   - component: {fileID: 885024718}
   - component: {fileID: 885024719}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Dungeon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,6 +473,7 @@ MonoBehaviour:
   OverworldMapData: {fileID: 11400000, guid: 8adf9d51c143a8d4ea83c5c87986c2bd, type: 2}
   dungeonFloorGridData: {fileID: 11400000, guid: 3589004197c0bfc4ebcd892746dbae11, type: 2}
   PlayerPrefab: {fileID: 1222572784768646404, guid: 904bd0f040d3b1e4c8ed2e5f62b3e310, type: 3}
+  OnMouseoverMovementTile: {fileID: 11400000, guid: 36dd19ec9892ff244b8fe0c77d8c514d, type: 2}
 --- !u!4 &885024715
 Transform:
   m_ObjectHideFlags: 0
@@ -447,25 +565,17 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 885024714}
-        m_TargetAssemblyTypeName: DungeonInstance, Assembly-CSharp
-        m_MethodName: MousePos
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 43ded702-f288-4619-b3f2-d7fb4ffad02c
-    m_ActionName: InputForTesting/Mouse[/Mouse/leftButton]
-  - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 9f07c728-91fc-49c4-9f97-c26f6d33daea
     m_ActionName: InputForTesting/Move[/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4ab2af5e-1154-42c7-9ef6-186642cf83af
+    m_ActionName: InputForTesting/Leftclick[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2d894f6a-cbf7-4d48-96b8-deebd7394637
+    m_ActionName: InputForTesting/Rightclick[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: InputForTesting
@@ -480,20 +590,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 885024713}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68f538ac3bac59b4ebd85c3fe27202e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d5a9ab8d70e0e0498bfc4ce5661d215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 08541e95c12b2a34f9ff5417c7a326d1, type: 2}
+  gameEvent: {fileID: 11400000, guid: 41ce16af28bb9c24c9729c96c8103ce5, type: 2}
   unityEvemtResponse:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 885024713}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 885024714}
+        m_TargetAssemblyTypeName: DungeonInstance, Assembly-CSharp
+        m_MethodName: UpdateCurrentPlayerState
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

@@ -36,8 +36,9 @@ public class DungeonInstance : MonoBehaviour
     PlayerBaseState _playerState;
     int _floorMeshBitMask = 1 << 6;
     int _x, _z;
+    Mesh _movementIndicator;
+    [SerializeField] private Vector3Event OnMouseoverMovementTile;
 
-   //[SerializeField] private IntEvent onXCoordSelected;
     
 
     void Awake(){
@@ -62,7 +63,7 @@ public class DungeonInstance : MonoBehaviour
                 break;
             case PlayerPlanMoveState:
             GetGridCoords();
-            //Debug.Log($"({_x}, {_z})");
+            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z));
                 break;
             default:
                 Debug.Log("default");
@@ -253,8 +254,10 @@ public class DungeonInstance : MonoBehaviour
 
     public void UpdateCurrentPlayerState(PlayerBaseState state){
         _playerState = state;
-        Debug.Log(state);
+        //Debug.Log(state);
     }
+
+
 
 
 #region SMOOTHING
