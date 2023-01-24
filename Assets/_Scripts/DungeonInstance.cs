@@ -38,6 +38,7 @@ public class DungeonInstance : MonoBehaviour
     int _x, _z;
     Mesh _movementIndicator;
     [SerializeField] private Vector3Event OnMouseoverMovementTile;
+    
 
     
 
@@ -45,6 +46,7 @@ public class DungeonInstance : MonoBehaviour
         
         Init();
         Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);
+        Debug.Log(_playerState + "awake");
     }
 
     
@@ -54,6 +56,7 @@ public class DungeonInstance : MonoBehaviour
         _floorMeshCollider = gameObject.AddComponent<MeshCollider>();
         _floorMeshCollider.sharedMesh = _floorMesh;
         gameObject.tag = "FloorMesh";
+        Debug.Log(_playerState + "start");
     }
 
     void Update(){
@@ -223,7 +226,7 @@ public class DungeonInstance : MonoBehaviour
         _offset = _cellSize / 2;
         _gridOriginPosition = new Vector3Int( -_middleCellX  * _cellSize, 0, -_middleCellZ * _cellSize); // this is the world pos of the grids lower left corner so that 0,0 in world space ends up in the middle 
         _walkablbes = new List<Vector3Int>();
-        _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, () => new DungeonFloorTile(_floorTiles, _width, _height), true);
+        _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, () => new DungeonFloorTile(_floorTiles, _width, _height), false);
         _thisDungeonInstance = SceneManager.GetActiveScene().name;
         _dungeonSeed = (int)OverworldMapData.GetType().GetField(_thisDungeonInstance + "_seed").GetValue(OverworldMapData); // reflection
     }
@@ -254,7 +257,6 @@ public class DungeonInstance : MonoBehaviour
 
     public void UpdateCurrentPlayerState(PlayerBaseState state){
         _playerState = state;
-        //Debug.Log(state);
     }
 
 

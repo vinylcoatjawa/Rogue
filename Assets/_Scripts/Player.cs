@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     Vector3 _mousePos;
     Vector3 _worldPos;
     PlayerStateManager playerStateManager;
-    //[SerializeField] private VoidEvent OnPlayerClicked;
+    [SerializeField] private VoidEvent OnPlayerEnterIdleState;
     
     void Awake(){
         _entityTransform = gameObject.transform;
@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
 
     private void SetPlayerIdle(InputAction.CallbackContext context){
         playerStateManager.SwitchState(playerStateManager.PlayerIdleState);
+        OnPlayerEnterIdleState.Raise();
     }
 
     void ClickOnPlayer(InputAction.CallbackContext context){

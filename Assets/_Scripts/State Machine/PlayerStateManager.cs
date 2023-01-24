@@ -9,13 +9,11 @@ public class PlayerStateManager : MonoBehaviour
     public PlayerIdleState PlayerIdleState = new PlayerIdleState();
     public PlayerPlanMoveState PlayerPlanMoveState = new PlayerPlanMoveState();
 
-    // Start is called before the first frame update
     void Start()
     {
         _currentState = PlayerIdleState;
         _currentState.EnterState(this);
         OnPlayerStateChanged.Raise(_currentState);
-        //Debug.Log(_currentState);
     }
 
 
@@ -23,8 +21,9 @@ public class PlayerStateManager : MonoBehaviour
         _currentState = state;
         state.EnterState(this);
         OnPlayerStateChanged.Raise(_currentState);
-        //Debug.Log(_currentState);
     }
+
+    
 
   
 }

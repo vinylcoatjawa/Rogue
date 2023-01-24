@@ -325,6 +325,7 @@ GameObject:
   - component: {fileID: 473932664}
   - component: {fileID: 473932667}
   - component: {fileID: 473932668}
+  - component: {fileID: 473932669}
   m_Layer: 0
   m_Name: MovementIndicator
   m_TagString: Untagged
@@ -437,6 +438,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60556d2104a277347858fb511f6f8acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &473932669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473932663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68f538ac3bac59b4ebd85c3fe27202e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 8bb4e1060e449504cbb0653faf42f3e9, type: 2}
+  unityEvemtResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473932668}
+        m_TargetAssemblyTypeName: MovementIndicator, Assembly-CSharp
+        m_MethodName: Destroy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &885024713
 GameObject:
   m_ObjectHideFlags: 0
