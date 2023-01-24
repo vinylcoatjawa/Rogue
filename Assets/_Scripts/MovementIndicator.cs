@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// An indicator quad highlighting the tile we currently hovering over
+/// </summary>
 public class MovementIndicator : MonoBehaviour
 {
     MeshFilter _meshFilter;
@@ -19,8 +22,11 @@ public class MovementIndicator : MonoBehaviour
         _movementIndicatorMesh = new Mesh();
 
     }
-
-    public void FindLowerLeftVertice(Vector3 input){
+    /// <summary>
+    /// Creates a quad over a dungeon floor tile to indicate the target tile of the move
+    /// </summary>
+    /// <param name="input">A Vector3 which is the world space coordinates of the lower left corner of the dungeon floor grid tile</param>
+    public void SpawnMovementIndicator(Vector3 input){
         _lowerLeftVertice = input;
         GetComponent<MeshFilter>().mesh = _movementIndicatorMesh; 
 
@@ -55,7 +61,9 @@ public class MovementIndicator : MonoBehaviour
         Material mat = Resources.Load<Material>("Materials/lowP/Vol_23_1_Rocks 1");
         _meshRenderer.material = mat;
     }
-
+    /// <summary>
+    /// Removes the spawned quad by clearing the mesh
+    /// </summary>
     public void Destroy(){
         GetComponent<MeshFilter>().mesh.Clear();
     }

@@ -7,12 +7,12 @@ using UnityEngine;
     public class Grid<TGridObject>
     {
         // Default orientation X-Z axis with X being the width and Z being the height
-        private int _width;
-        private int _height;
-        private int _cellSize;
-        private Vector3 _originPosition;
-        private bool _allowDebug;
-        private TGridObject[,] _gridArray;
+        int _width;
+        int _height;
+        int _cellSize;
+        Vector3 _originPosition;
+        bool _allowDebug;
+        TGridObject[,] _gridArray;
         TextMesh[,] _debugTestArray;
         
 
@@ -22,7 +22,7 @@ using UnityEngine;
         /// <param name="width">Number of columns in the grid</param>
         /// <param name="height"> Number of rows in the grid</param>
         /// <param name="cellSize">Sizelength of the quadratic gridpositions</param>
-        /// <param name="originPosition">Coordinates of the bottom-leftmost gridcells position</param>
+        /// <param name="originPosition">Coordinates of the bottom-leftmost gridcells position in world space</param>
         /// <param name="createGridObject">Default grid object needed to initialize the Grid</param>
         public Grid(int width, int height, int cellSize, Vector3 originPosition, Func<TGridObject> createGridObject, bool allowDebug)
         {

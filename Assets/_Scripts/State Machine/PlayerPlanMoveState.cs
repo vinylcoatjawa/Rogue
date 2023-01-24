@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerPlanMoveState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager player)

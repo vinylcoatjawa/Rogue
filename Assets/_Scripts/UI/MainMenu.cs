@@ -10,7 +10,6 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        Debug.Log("Start was clicked");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
     /// <summary>

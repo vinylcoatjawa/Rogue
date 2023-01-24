@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-
+/// <summary>
+/// Virtual camera attached to the player
+/// </summary>
 public class PlayerVCam : MonoBehaviour
 {
     GameObject _player;
@@ -30,23 +30,5 @@ public class PlayerVCam : MonoBehaviour
         _transposer.m_YDamping = 0;
         _transposer.m_ZDamping = 0;
     }
-
-    // public void MousePos(){
-    //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-    //     if (Physics.Raycast(ray, out RaycastHit raycastHit)){
-    //         _floorMesh.get
-            
-    //         Debug.Log(raycastHit.transform.position);
-
-    //     }
-        //Vector3 mousePos = Input.mousePosition;
-        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-        //Vector3 worldPos = _brain.OutputCamera.ScreenToWorldPoint(mousePos);
-        //Debug.Log($"mousepos is: {mousePos} and worldPos is: {worldPos}");
-        //Debug.Log(mousePos + "  " + worldPos);
-        //Debug.Log(Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x,mousePos.y, Camera.main.nearClipPlane)));
-    
-
    
 }

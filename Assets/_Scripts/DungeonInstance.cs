@@ -8,7 +8,7 @@ using NoiseUtils;
 public enum CardinalDirection { North = 0, East = 1, South = 2, West = 3 };
 
 /// <summary>
-/// Script on the spawned scene
+/// Script on the spawned scene handling the dungeon instance
 /// </summary>
 public class DungeonInstance : MonoBehaviour
 {
@@ -45,20 +45,16 @@ public class DungeonInstance : MonoBehaviour
     void Awake(){
         
         Init();
-        Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);
-        Debug.Log(_playerState + "awake");
+        Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);   
     }
-
-    
     void Start(){
         DLA();      
         GeneratFloorMesh();
         _floorMeshCollider = gameObject.AddComponent<MeshCollider>();
         _floorMeshCollider.sharedMesh = _floorMesh;
         gameObject.tag = "FloorMesh";
-        Debug.Log(_playerState + "start");
+        
     }
-
     void Update(){
         switch (_playerState)
         {
@@ -66,15 +62,13 @@ public class DungeonInstance : MonoBehaviour
                 break;
             case PlayerPlanMoveState:
             GetGridCoords();
-            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z));
+            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z)); // sends the world position of the tile which we hover over
                 break;
             default:
                 Debug.Log("default");
                 break;
         }
-    }
-
-    
+    }    
     /// <summary>
     /// Generates a mesh by running through the grid and spawning a quad where the dungeon floor tile is tagged walkable
     /// </summary>
@@ -245,7 +239,9 @@ public class DungeonInstance : MonoBehaviour
         return tile;
     }
 
-
+    /// <summary>
+    /// Gets the x (_x) and z (_z) coordinates of the tile we hover over
+    /// </summary>
     void GetGridCoords(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Vector3 worldPos;
@@ -255,6 +251,10 @@ public class DungeonInstance : MonoBehaviour
         }   
     }
 
+    /// <summary>
+    /// Updates the player state
+    /// </summary>
+    /// <param name="state">The state to which we will upgrade the player state</param>
     public void UpdateCurrentPlayerState(PlayerBaseState state){
         _playerState = state;
     }

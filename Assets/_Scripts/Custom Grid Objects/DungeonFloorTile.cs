@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Tile type to use as the floor of the dungeon 
+/// </summary>
 public class DungeonFloorTile
 {
     int _width, _height, _walkableNeighbourCount = 0;

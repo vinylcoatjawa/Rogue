@@ -416,7 +416,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 473932668}
         m_TargetAssemblyTypeName: MovementIndicator, Assembly-CSharp
-        m_MethodName: FindLowerLeftVertice
+        m_MethodName: SpawnMovementIndicator
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

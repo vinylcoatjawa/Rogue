@@ -72,7 +72,7 @@ public class WorldMap : MonoBehaviour
             {
                 int water = 0, grass = 0, mountain = 0, total = 0;
                 
-                for (int i = x * 36; i < (x + 1) * 36; i++) // currently 36 is the hard coded size difference between the underlying perlin noise and the structure grid
+                for (int i = x * 36; i < (x + 1) * 36; i++) // currently 36 is the hard coded size difference between the underlying perlin noise grid dand the structure grid
                 {
                     for (int j = z * 36; j < (z + 1) * 36; j++)
                     {

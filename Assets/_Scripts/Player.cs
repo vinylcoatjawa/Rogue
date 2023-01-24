@@ -19,16 +19,22 @@ public class Player : MonoBehaviour
         playerStateManager = GetComponent<PlayerStateManager>();
         InputActions inputActions = new InputActions();
         inputActions.InputForTesting.Enable();
-        inputActions.InputForTesting.Leftclick.performed += ClickOnPlayer;
+        inputActions.InputForTesting.Leftclick.performed += SetPlayerReadyToMove;
         inputActions.InputForTesting.Rightclick.performed += SetPlayerIdle;
     }
-
+    /// <summary>
+    /// Sets the player into idle state
+    /// </summary>
+    /// <param name="context">Currently not used</param>
     private void SetPlayerIdle(InputAction.CallbackContext context){
         playerStateManager.SwitchState(playerStateManager.PlayerIdleState);
         OnPlayerEnterIdleState.Raise();
     }
-
-    void ClickOnPlayer(InputAction.CallbackContext context){
+    /// <summary>
+    /// Sets the player into pre move state where we can choose a tile t move to
+    /// </summary>
+    /// <param name="context">Currently not used</param>
+    void SetPlayerReadyToMove(InputAction.CallbackContext context){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out RaycastHit raycastHit);
         if(raycastHit.transform != null && raycastHit.transform.gameObject.CompareTag("Player")){
