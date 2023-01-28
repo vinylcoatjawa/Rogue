@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using UnityEngine.InputSystem;
 using NoiseUtils;
+using System;
 
 public enum CardinalDirection { North = 0, East = 1, South = 2, West = 3 };
 
@@ -37,16 +38,21 @@ public class DungeonInstance : MonoBehaviour
     int _floorMeshBitMask = 1 << 6;
     int _x, _z;
     Mesh _movementIndicator;
+    PlayerStateManager _playerStateManager;
     [SerializeField] private Vector3Event OnMouseoverMovementTile;
     
 
     
 
     void Awake(){
-        
+        InputActions inputActions = new InputActions();
+        inputActions.InputForTesting.Enable();
+        inputActions.InputForTesting.Leftclick.performed += RecordTile;
         Init();
         Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);   
     }
+
+
     void Start(){
         DLA();      
         GeneratFloorMesh();
@@ -62,7 +68,7 @@ public class DungeonInstance : MonoBehaviour
                 break;
             case PlayerPlanMoveState:
             GetGridCoords();
-            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z)); // sends the world position of the tile which we hover over
+            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z)); // sends the world position of the tile which we hover over        
                 break;
             default:
                 Debug.Log("default");
@@ -208,7 +214,6 @@ public class DungeonInstance : MonoBehaviour
         int enumKey = _noise.IntNoiseInRange(0, 4, position, seed);
         return (CardinalDirection)enumKey;
     }
-
     /// <summary>
     /// Initializes some values 
     /// </summary>
@@ -224,7 +229,6 @@ public class DungeonInstance : MonoBehaviour
         _thisDungeonInstance = SceneManager.GetActiveScene().name;
         _dungeonSeed = (int)OverworldMapData.GetType().GetField(_thisDungeonInstance + "_seed").GetValue(OverworldMapData); // reflection
     }
-
     /// <summary>
     /// Select a tile from a list of tilepositions
     /// </summary>
@@ -238,7 +242,6 @@ public class DungeonInstance : MonoBehaviour
         Vector3Int tile = walkables[tileIndex];
         return tile;
     }
-
     /// <summary>
     /// Gets the x (_x) and z (_z) coordinates of the tile we hover over
     /// </summary>
@@ -250,7 +253,6 @@ public class DungeonInstance : MonoBehaviour
             _floorTiles.GetXY(worldPos, out _x, out _z);
         }   
     }
-
     /// <summary>
     /// Updates the player state
     /// </summary>
@@ -259,6 +261,23 @@ public class DungeonInstance : MonoBehaviour
         _playerState = state;
     }
 
+    void RecordTile(InputAction.CallbackContext context){
+        switch (_playerState)
+        {
+            case PlayerIdleState:
+                break;
+            case PlayerPlanMoveState:
+                Debug.Log(OnMovementTileSelected());
+                break;
+            default:
+                Debug.Log("default");
+                break;
+        }
+    }
+    
+    Vector3 OnMovementTileSelected(){
+        return _floorTiles.GetWorldPosition(_x, _z);
+    }
 
 
 

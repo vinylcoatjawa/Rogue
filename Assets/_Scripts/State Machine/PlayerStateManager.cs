@@ -29,6 +29,9 @@ public class PlayerStateManager : MonoBehaviour
         state.EnterState(this);
         OnPlayerStateChanged.Raise(_currentState);
     }
+    public PlayerBaseState GetCurrentState(){
+        return _currentState;
+    }
 
     
 

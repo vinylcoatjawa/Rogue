@@ -12,7 +12,9 @@ public class Player : MonoBehaviour
     Vector3 _mousePos;
     Vector3 _worldPos;
     PlayerStateManager playerStateManager;
+    PlayerBaseState _currentState;
     [SerializeField] private VoidEvent OnPlayerEnterIdleState;
+    [SerializeField] private Vector3Event OnSelectTargetTile;
     
     void Awake(){
         _entityTransform = gameObject.transform;
@@ -26,8 +28,9 @@ public class Player : MonoBehaviour
     /// Sets the player into idle state
     /// </summary>
     /// <param name="context">Currently not used</param>
-    private void SetPlayerIdle(InputAction.CallbackContext context){
+    void SetPlayerIdle(InputAction.CallbackContext context){
         playerStateManager.SwitchState(playerStateManager.PlayerIdleState);
+        _currentState = playerStateManager.PlayerIdleState;
         OnPlayerEnterIdleState.Raise();
     }
     /// <summary>
@@ -39,9 +42,10 @@ public class Player : MonoBehaviour
         Physics.Raycast(ray, out RaycastHit raycastHit);
         if(raycastHit.transform != null && raycastHit.transform.gameObject.CompareTag("Player")){
             playerStateManager.SwitchState(playerStateManager.PlayerPlanMoveState);
+            _currentState = playerStateManager.PlayerPlanMoveState;
         }
     }
-    
+
 
 
 }
