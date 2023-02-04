@@ -6,12 +6,21 @@ using UnityEngine;
     /// </summary>
     public class Grid<TGridObject>
     {
+        /// <summary>
+        /// Event and EventArgs to be triggered whenever something changes inside the gridObject
+        /// </summary>
+        public event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
+        public class OnGridObjectChangedEventArgs : EventArgs {
+            public int x;
+            public int z;
+        } 
+        
         // Default orientation X-Z axis with X being the width and Z being the height
         int _width;
         int _height;
         int _cellSize;
-        Vector3 _originPosition;
         bool _allowDebug;
+        Vector3 _originPosition;
         TGridObject[,] _gridArray;
         TextMesh[,] _debugTestArray;
         
@@ -23,8 +32,9 @@ using UnityEngine;
         /// <param name="height"> Number of rows in the grid</param>
         /// <param name="cellSize">Sizelength of the quadratic gridpositions</param>
         /// <param name="originPosition">Coordinates of the bottom-leftmost gridcells position in world space</param>
-        /// <param name="createGridObject">Default grid object needed to initialize the Grid</param>
-        public Grid(int width, int height, int cellSize, Vector3 originPosition, Func<TGridObject> createGridObject, bool allowDebug)
+        /// <param name="createGridObject">Default grid object needed to initialize the Grid, we need to pass reference to the grid and x, z position for the possibility to
+        /// trigger the event called OnGridObjectChanged with correct arguments </param>
+        public Grid(int width, int height, int cellSize, Vector3 originPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject, bool allowDebug)
         {
             this._width = width;
             this._height = height;
@@ -32,27 +42,22 @@ using UnityEngine;
             this._originPosition = originPosition;
             this._allowDebug = allowDebug;
 
-
             Vector3 middleOffset = new Vector3(cellSize, 0, cellSize) * 0.5f;
 
-        /* initializing array with default objects */
-        _gridArray = new TGridObject[_width, _height];
-            for (int x = 0; x < _width; x++)
-            {
-                for (int z = 0; z < _height; z++)
-                {
-                    _gridArray[x, z] = createGridObject();
+            /* initializing array with default objects */
+            _gridArray = new TGridObject[_width, _height];
+            for (int x = 0; x < _width; x++){
+                for (int z = 0; z < _height; z++){
+                    _gridArray[x, z] = createGridObject(this, x, z);
                 }
             }
+            /* initializing textmesh array to hold debug objects */
             _debugTestArray = new TextMesh[_width, _height];
             # region DEBUGARRAY
-            if (_allowDebug)
-            {
+            if (_allowDebug){
                 GameObject debugGrid = new GameObject("debug grid");
-                for (int x = 0; x < _width; x++)
-                {
-                    for (int z = 0; z < _height; z++)
-                    {
+                for (int x = 0; x < _width; x++){
+                    for (int z = 0; z < _height; z++){
                         _debugTestArray[x, z] = CreateWorldText(_gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + middleOffset, _cellSize, Color.black, TextAnchor.MiddleCenter);
                         _debugTestArray[x, z].gameObject.transform.SetParent(debugGrid.transform);
 
@@ -63,12 +68,14 @@ using UnityEngine;
 
                 Debug.DrawLine(GetWorldPosition(0, _height), GetWorldPosition(_width, _height), Color.black, 100f);
                 Debug.DrawLine(GetWorldPosition(_width, 0), GetWorldPosition(_width, _height), Color.black, 100f);
+
+                OnGridObjectChanged += (object sender, OnGridObjectChangedEventArgs eventArgs) => {
+                    _debugTestArray[eventArgs.x, eventArgs.z].text = _gridArray[eventArgs.x, eventArgs.z].ToString();
+                };
             }
 
             #endregion
         }
-
-
 
         /// <summary>
         /// Returns the number of columns in the grid aka the 'x' value 
@@ -115,8 +122,9 @@ using UnityEngine;
             if (x >= 0 && z >= 0 && x < _width && z < _height)
             {
                 _gridArray[x, z] = value;
-                if (_debugTestArray[0,0] != null) { _debugTestArray[x, z].text = _gridArray[x, z]?.ToString(); }
+                //if (_debugTestArray[0,0] != null) { _debugTestArray[x, z].text = _gridArray[x, z]?.ToString(); }
                 /*ugly way to see if allowDebug flag is true or not*/
+                if (OnGridObjectChanged != null){ OnGridObjectChanged(this, new OnGridObjectChangedEventArgs{ x = x, z = z }); Debug.Log($"{x}, {z}"); }
             }
         }
     /// <summary>
@@ -176,6 +184,15 @@ using UnityEngine;
                 return default(TGridObject);
             }
         }
+        /// <summary>
+        /// Function to trigger an event, used to broadcast changes inside grid objects
+        /// </summary>
+        /// <param name="x">The X coordinate of the changed grid object</param>
+        /// <param name="z">The Z coordinate of the changed grid object</param>
+        public void TriggerGridObjectChanged(int x, int z){
+            if (OnGridObjectChanged != null){ OnGridObjectChanged(this, new OnGridObjectChangedEventArgs{ x = x, z = z }); }
+        }
+
         #region UTILS
 
 

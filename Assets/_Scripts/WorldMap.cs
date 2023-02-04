@@ -1,9 +1,9 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Unity.Collections;
+//using Unity.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using UnityEngine.SceneManagement;
+//using System.Collections.Specialized;
+//using UnityEngine.SceneManagement;
 
 public class WorldMap : MonoBehaviour
 {
@@ -24,7 +24,8 @@ public class WorldMap : MonoBehaviour
     private void Start()
     {
         _noiseMap = PerlinMap.GenerateNoiseMap(360, 360, 10 , 165, 4, 0.33f, 2.5f, (uint)OverworldMapData.Seed, Vector2.zero, false);
-        _overworldMapStructureGrid = new Grid<OverworldStructureCustomTile>(10, 10, 60, Vector3.zero, () => new OverworldStructureCustomTile(0, 0, 0, 0), false);
+        _overworldMapStructureGrid = new Grid<OverworldStructureCustomTile>(10, 10, 60, Vector3.zero, 
+            (Grid<OverworldStructureCustomTile> grid, int x, int z) => new OverworldStructureCustomTile(grid, x, z), false);
         DrawTexture(); // Draws the map       
         PopulateStrucureGrid();
         _possibleStructureDict = FilterAwaySeaTiles();
@@ -62,7 +63,7 @@ public class WorldMap : MonoBehaviour
         _textureRenderer.sharedMaterial.mainTexture = _texture;
     }
     /// <summary>
-    /// Populate MapStructureGrid with custom tiles containing informationabout the terrain in the tile
+    /// Populate MapStructureGrid with custom tiles containing information about the terrain in the tile
     /// </summary>
     public void PopulateStrucureGrid()
     {
@@ -91,8 +92,11 @@ public class WorldMap : MonoBehaviour
                         }        
                     }
                 }
-                OverworldStructureCustomTile current = new OverworldStructureCustomTile(total, grass, mountain, water);
-                _overworldMapStructureGrid.SetGridObject(x, z, current);
+                OverworldStructureCustomTile current = _overworldMapStructureGrid.GetGridObject(x, z);
+                current._noOfGrassTiles = grass;
+                current._noOfMountainTiles = mountain;
+                current._noOfWaterTiles = water;
+                current._noOfPixels = total;
             }
         }
         

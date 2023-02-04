@@ -21,7 +21,7 @@ public class DungeonMeshTest : MonoBehaviour
         _meshFilter = GetComponent<MeshFilter>();
         _meshFilter.sharedMesh = _mesh;
         _rend = GetComponent<MeshRenderer>();
-        _dungTiles = new Grid<DungeonFloorTile>(_width, _height, _cellSize, Vector3.zero, () => new DungeonFloorTile(_dungTiles, _width, _height), true);
+        //_dungTiles = new Grid<DungeonFloorTile>(_width, _height, _cellSize, Vector3.zero, () => new DungeonFloorTile(_dungTiles, _width, _height), true);
     }
 
     public void GenerateMesh(){

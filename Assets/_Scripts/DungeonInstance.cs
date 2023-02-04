@@ -9,7 +9,7 @@ using System;
 public enum CardinalDirection { North = 0, East = 1, South = 2, West = 3 };
 
 /// <summary>
-/// Script on the spawned scene handling the dungeon instance
+/// Script on the spawned scene handling the dungeon instance (probably will only hold map mesh related data tex pathfinding)
 /// </summary>
 public class DungeonInstance : MonoBehaviour
 {
@@ -23,20 +23,20 @@ public class DungeonInstance : MonoBehaviour
     int _middleCellX;
     int _middleCellZ;
     int _offset;
+    int _dungeonSeed;
+    int _floorMeshBitMask = 1 << 6;
+    int _x, _z;
     int _dungeonFloorTileCount = 1000;
+    string _thisDungeonInstance;
     Vector3Int _gridOriginPosition;
     List<Vector3Int> _walkablbes;
     Grid<DungeonFloorTile> _floorTiles;
     Grid<GameObject> _movementGrid;
-    CardinalDirection cardinalDirection;
+    CardinalDirection _cardinalDirection;
     Noise _noise;
     Mesh _floorMesh;
-    int _dungeonSeed;
-    string _thisDungeonInstance;
     MeshCollider _floorMeshCollider;
     PlayerBaseState _playerState;
-    int _floorMeshBitMask = 1 << 6;
-    int _x, _z;
     Mesh _movementIndicator;
     PlayerStateManager _playerStateManager;
     [SerializeField] private Vector3Event OnMouseoverMovementTile;
@@ -52,7 +52,6 @@ public class DungeonInstance : MonoBehaviour
         Instantiate(PlayerPrefab, new Vector3(_cellSize / 2, 1, _cellSize / 2), Quaternion.identity);   
     }
 
-
     void Start(){
         DLA();      
         GeneratFloorMesh();
@@ -61,6 +60,7 @@ public class DungeonInstance : MonoBehaviour
         gameObject.tag = "FloorMesh";
         
     }
+
     void Update(){
         switch (_playerState)
         {
@@ -71,7 +71,7 @@ public class DungeonInstance : MonoBehaviour
             OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z)); // sends the world position of the tile which we hover over        
                 break;
             default:
-                Debug.Log("default");
+                Debug.Log("default Player state in DungeonInstance");
                 break;
         }
     }    
@@ -142,9 +142,9 @@ public class DungeonInstance : MonoBehaviour
         SetMiddleWalkable();
         for (int i = 0; i < _dungeonFloorTileCount; i++)
         {
-            cardinalDirection = PickAxis(i, _dungeonSeed);
+            _cardinalDirection = PickAxis(i, _dungeonSeed);
             Vector3Int currentSelection = SelectRandomFromWalkableList(_walkablbes, i, _dungeonSeed);
-            Expand(currentSelection, cardinalDirection);
+            Expand(currentSelection, _cardinalDirection);
         }
     }
     /// <summary>
@@ -225,7 +225,8 @@ public class DungeonInstance : MonoBehaviour
         _offset = _cellSize / 2;
         _gridOriginPosition = new Vector3Int( -_middleCellX  * _cellSize, 0, -_middleCellZ * _cellSize); // this is the world pos of the grids lower left corner so that 0,0 in world space ends up in the middle 
         _walkablbes = new List<Vector3Int>();
-        _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, () => new DungeonFloorTile(_floorTiles, _width, _height), false);
+        _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, 
+            (Grid<DungeonFloorTile> grid, int x, int z) => new DungeonFloorTile(grid, x, z), true);
         _thisDungeonInstance = SceneManager.GetActiveScene().name;
         _dungeonSeed = (int)OverworldMapData.GetType().GetField(_thisDungeonInstance + "_seed").GetValue(OverworldMapData); // reflection
     }
@@ -243,7 +244,7 @@ public class DungeonInstance : MonoBehaviour
         return tile;
     }
     /// <summary>
-    /// Gets the x (_x) and z (_z) coordinates of the tile we hover over
+    /// Gets the x (_x) and z (_z) coordinates of the tile we hover over, this is called in Update whenever the player state is PlayerPlanMoveState
     /// </summary>
     void GetGridCoords(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -260,21 +261,27 @@ public class DungeonInstance : MonoBehaviour
     public void UpdateCurrentPlayerState(PlayerBaseState state){
         _playerState = state;
     }
-
+    /// <summary>
+    /// In case th player is in move planning state left-click records the  Probably bad name for this
+    /// </summary>
+    /// <param name="context">Not used as of yet</param>
     void RecordTile(InputAction.CallbackContext context){
         switch (_playerState)
         {
             case PlayerIdleState:
                 break;
             case PlayerPlanMoveState:
-                Debug.Log(OnMovementTileSelected());
+                Debug.Log($"worldpos: {OnMovementTileSelected()} and tile coords are: ({_x}, {_z})");
                 break;
             default:
                 Debug.Log("default");
                 break;
         }
     }
-    
+    /// <summary>
+    /// Gets the world position of a the grid coords _x and _z which are populated on Update (this might be obsolete)
+    /// </summary>
+    /// <returns></returns>
     Vector3 OnMovementTileSelected(){
         return _floorTiles.GetWorldPosition(_x, _z);
     }

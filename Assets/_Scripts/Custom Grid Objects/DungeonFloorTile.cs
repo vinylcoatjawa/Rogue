@@ -1,25 +1,28 @@
+using System;
 using UnityEngine;
 /// <summary>
 /// Tile type to use as the floor of the dungeon 
 /// </summary>
 public class DungeonFloorTile
 {
-    int _width, _height, _walkableNeighbourCount = 0;
+    int _x, _z, _walkableNeighbourCount = 0;
     bool _isWalkable;
     Grid<DungeonFloorTile> _grid;
     //public bool _hasWallNorth, _hasWallEast, _hasWallSouth, _hasWallWest;
-    public DungeonFloorTile(Grid<DungeonFloorTile> grid, int width, int height){
+    public DungeonFloorTile(Grid<DungeonFloorTile> grid, int x, int z){
         this._grid = grid;
-        this._width = width;
-        this._height = height;
+        this._x = x;
+        this._z = z;
 
     }
 
     public void SetTileWalkable(){
         _isWalkable = true;
+        _grid.TriggerGridObjectChanged(_x, _z);
     }
     public void SetTileUnWalkable(){
         _isWalkable = false;
+        _grid.TriggerGridObjectChanged(_x, _z);
     }
     public bool IsWalkable(){
         return _isWalkable;
@@ -30,6 +33,11 @@ public class DungeonFloorTile
     }
     public int GetWalkableNeighbourCount(){
         return _walkableNeighbourCount;
+    }
+
+    public override string ToString()
+    {
+        return _isWalkable.ToString();
     }
      
 }

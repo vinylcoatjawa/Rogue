@@ -102,6 +102,6 @@ public class OverWorldMapDisplay : MonoBehaviour
         float height = (float)Height / 10;
         //float cellSize = CellSize * Height;
         //_structures = new Grid<int>((int)width, (int)height, CellSize * 6, Vector3.zero, () => 0, AllowStructDebug);
-        _structures = new Grid<int>(10, 10, 60, Vector3.zero, () => 0, AllowStructDebug);
+        //_structures = new Grid<int>(10, 10, 60, Vector3.zero, () => 0, AllowStructDebug);
     }
 }

@@ -16,7 +16,7 @@ public class MeshTesting : MonoBehaviour
     private void Start() {
         _mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = _mesh;
-        testGrid = new Grid<bool>(gridWidth, gridHeight, cellSize, Vector3.zero, () => false, true);       
+        //testGrid = new Grid<bool>(gridWidth, gridHeight, cellSize, Vector3.zero, () => false, true);       
         MeshUtils.CreateEmptyMeshArrays(25, out Vector3[] vertices, out Vector2[] uvs, out int[] triangles);
         Vector3 quadSize = new Vector3(1,1) * cellSize;
         
@@ -79,7 +79,7 @@ public class MeshTesting : MonoBehaviour
     public void DrawDungeonFloor(){
         _mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = _mesh;
-        testGrid = new Grid<bool>(gridWidth, gridHeight, cellSize, Vector3.zero, () => true, true);       
+        //testGrid = new Grid<bool>(gridWidth, gridHeight, cellSize, Vector3.zero, () => true, true);       
         MeshUtils.CreateEmptyMeshArrays(25, out Vector3[] vertices, out Vector2[] uvs, out int[] triangles);
 
         Vector3 quadSize = new Vector3(1,1) * cellSize;
