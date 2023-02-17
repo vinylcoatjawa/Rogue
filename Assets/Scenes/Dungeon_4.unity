@@ -1073,6 +1073,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735386224}
   - component: {fileID: 1735386223}
+  - component: {fileID: 1735386225}
   m_Layer: 0
   m_Name: EventTester
   m_TagString: Untagged
@@ -1099,7 +1100,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735386222}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 57.978733, y: 246.61925, z: -215.56204}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1107,6 +1108,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1735386225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735386222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d5a9ab8d70e0e0498bfc4ce5661d215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 41ce16af28bb9c24c9729c96c8103ce5, type: 2}
+  unityEvemtResponse:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1825677157
 GameObject:
   m_ObjectHideFlags: 3

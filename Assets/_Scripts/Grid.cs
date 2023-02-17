@@ -99,7 +99,7 @@ using UnityEngine;
         /// <param name="x">The gridcells 'x' coordinate</param>
         /// <param name="z">The gridcells 'z' coordinate</param>
         /// <returns></returns>
-        public Vector3 GetWorldPosition(int x, int z, int y = 0) // convert from grid space to world space
+        public Vector3 GetWorldPosition(int x, int z, float y = 0) // convert from grid space to world space
         {
             return new Vector3(x, y, z) * _cellSize + _originPosition;
         }
@@ -185,7 +185,7 @@ using UnityEngine;
             }
         }
         /// <summary>
-        /// Function to trigger an event, used to broadcast changes inside grid objects
+        /// Function to trigger an event, used to broadcast changes inside grid objects (use this to update the debug grid for example)
         /// </summary>
         /// <param name="x">The X coordinate of the changed grid object</param>
         /// <param name="z">The Z coordinate of the changed grid object</param>
