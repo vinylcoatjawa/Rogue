@@ -9,14 +9,16 @@ using System;
 public enum CardinalDirection { North = 0, East = 1, South = 2, West = 3 };
 
 /// <summary>
-/// Script on the spawned scene handling the dungeon instance (probably will only hold map mesh related data tex pathfinding)
+/// Script on the spawned scene handling the dungeon instance (probably will only hold map mesh related data and pathfinding)
 /// </summary>
 public class DungeonInstance : MonoBehaviour
 {
+    const int MOVE_STRAIGHT_COST = 10;
+    const int MOVE_DIAGONAL_COST =  14;
+    
     public OverworldMapData OverworldMapData;
     public DungeonFloorGridData dungeonFloorGridData;
     public GameObject PlayerPrefab;
-
     int _height = 51; // should be odd so we have a middle tile
     int _width = 51; // should be odd so we have a middle tile
     int _cellSize = 10;
@@ -25,10 +27,12 @@ public class DungeonInstance : MonoBehaviour
     int _offset;
     int _dungeonSeed;
     int _floorMeshBitMask = 1 << 6;
-    int _x, _z;
+    int _x, _z, _movementTargetX, _movementTargetZ;
     int _dungeonFloorTileCount = 1000;
     string _thisDungeonInstance;
     Vector3Int _gridOriginPosition;
+    List<DungeonFloorTile> _openList;
+    List<DungeonFloorTile> _closedList;
     List<Vector3Int> _walkablbes;
     Grid<DungeonFloorTile> _floorTiles;
     Grid<GameObject> _movementGrid;
@@ -68,7 +72,7 @@ public class DungeonInstance : MonoBehaviour
                 break;
             case PlayerPlanMoveState:
             GetGridCoords();
-            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z)); // sends the world position of the tile which we hover over        
+            OnMouseoverMovementTile.Raise( _floorTiles.GetWorldPosition(_x, _z)); // sends the world position of the tile which we hover over      
                 break;
             default:
                 Debug.Log("default Player state in DungeonInstance");
@@ -226,10 +230,11 @@ public class DungeonInstance : MonoBehaviour
         _gridOriginPosition = new Vector3Int( -_middleCellX  * _cellSize, 0, -_middleCellZ * _cellSize); // this is the world pos of the grids lower left corner so that 0,0 in world space ends up in the middle 
         _walkablbes = new List<Vector3Int>();
         _floorTiles = new Grid<DungeonFloorTile>( _width, _height, _cellSize, _gridOriginPosition, 
-            (Grid<DungeonFloorTile> grid, int x, int z) => new DungeonFloorTile(grid, x, z), true);
+            (Grid<DungeonFloorTile> grid, int x, int z) => new DungeonFloorTile(grid, x, z), false);
         _thisDungeonInstance = SceneManager.GetActiveScene().name;
         _dungeonSeed = (int)OverworldMapData.GetType().GetField(_thisDungeonInstance + "_seed").GetValue(OverworldMapData); // reflection
     }
+
     /// <summary>
     /// Select a tile from a list of tilepositions
     /// </summary>
@@ -264,27 +269,177 @@ public class DungeonInstance : MonoBehaviour
     /// <summary>
     /// In case th player is in move planning state left-click records the  Probably bad name for this
     /// </summary>
-    /// <param name="context">Not used as of yet</param>
+    /// <param name="context">Not used as of yet but needed as input to be able to set the delegate</param>
     void RecordTile(InputAction.CallbackContext context){
         switch (_playerState)
         {
             case PlayerIdleState:
                 break;
             case PlayerPlanMoveState:
-                Debug.Log($"worldpos: {OnMovementTileSelected()} and tile coords are: ({_x}, {_z})");
+                _movementTargetX = _x;
+                _movementTargetZ = _z;
+                List<DungeonFloorTile> path = FindPath(25, 25, _movementTargetX, _movementTargetZ);
+                if(path != null){
+                    for (int i = 0; i < path.Count - 1; i++ ){
+                        Vector3 segmentI = _floorTiles.GetWorldPosition(path[i].GridX, path[i].GridZ, 0.1f);
+                        Vector3 segmentII = _floorTiles.GetWorldPosition(path[i+1].GridX, path[i+1].GridZ, 0.1f);
+                        Debug.DrawLine(segmentI + new Vector3(1, 0, 1) * _offset, segmentII + new Vector3(1, 0, 1) * _offset, Color.red, 3f);
+                    }
+                }
                 break;
             default:
                 Debug.Log("default");
                 break;
         }
     }
+
+#region Pathfinding 
+    
     /// <summary>
-    /// Gets the world position of a the grid coords _x and _z which are populated on Update (this might be obsolete)
+    /// Function to calculate path between two floortiles. It will prefer diagonal movement 
     /// </summary>
-    /// <returns></returns>
-    Vector3 OnMovementTileSelected(){
-        return _floorTiles.GetWorldPosition(_x, _z);
+    /// <param name="startX">X grid coord of the start tile</param>
+    /// <param name="startZ">Y grid coord of the start tile</param>
+    /// <param name="endX">X grid coord of the target tile</param>
+    /// <param name="endZ">Z grid coord of the target tile</param>
+    /// <returns>List of floor tiles to get from start to target in order from start</returns>
+    private List<DungeonFloorTile> FindPath(int startX, int startZ, int endX, int endZ){
+        DungeonFloorTile startTile = _floorTiles.GetGridObject(startX, startZ);
+        DungeonFloorTile endTile = _floorTiles.GetGridObject(endX, endZ);
+
+
+        _openList = new List<DungeonFloorTile>{ startTile };
+        _closedList = new List<DungeonFloorTile>();
+
+        /* setting initial values */
+        ResetPathFindingData();
+        startTile.GCost = 0;
+        startTile.HCost = CalculateDistance(startTile, endTile);
+        startTile.CalculateFCost();
+
+        while(_openList.Count > 0){
+            DungeonFloorTile currentTile = GetLowestFCostTile(_openList);
+            if (currentTile == endTile){
+                /* this case we are done with the search */
+                return CalculatePath(endTile);
+            }
+            _openList.Remove(currentTile);
+            _closedList.Add(currentTile);
+            foreach (DungeonFloorTile neighbourTile in GetNeighbourList(currentTile)){
+                if (_closedList.Contains(neighbourTile)) continue;
+                int tentativeGCost = currentTile.GCost + CalculateDistance(currentTile, neighbourTile);
+                if (tentativeGCost < neighbourTile.GCost){
+                    neighbourTile.cameFromTile = currentTile;
+                    neighbourTile.GCost = tentativeGCost;
+                    neighbourTile.HCost = CalculateDistance(neighbourTile, endTile);
+                    neighbourTile.CalculateFCost();
+
+                    if (!_openList.Contains(neighbourTile)){
+                        _openList.Add(neighbourTile);
+                    }
+                }
+            }       
+        }
+        // out of nodes on the openList
+        return null;
     }
+
+    /// <summary>
+    /// Collects all the walkable tiles neighbouring the input tile to a list, if there are any unwalkable around the input only the possible 
+    /// cardinal directions are collected
+    /// </summary>
+    /// <param name="currentTile">Floortile to scan</param>
+    /// <returns>List of walkable neighbour tiles</returns>
+    private List<DungeonFloorTile> GetNeighbourList(DungeonFloorTile currentTile){
+        List<DungeonFloorTile> neighbourList = new List<DungeonFloorTile>();
+        bool hasNeighbouringWall = false;
+        for (int x = -1; x < 2; x++){
+            for (int z = -1; z < 2; z++){
+                if(!(x == 0 && z == 0)){
+                    if(_floorTiles.GetGridObject(currentTile.GridX + x, currentTile.GridZ + z) != null && 
+                        _floorTiles.GetGridObject(currentTile.GridX + x, currentTile.GridZ + z).IsWalkable()){
+                        neighbourList.Add(_floorTiles.GetGridObject(currentTile.GridX + x, currentTile.GridZ + z));
+                    }
+                    else if(_floorTiles.GetGridObject(currentTile.GridX + x, currentTile.GridZ + z) != null && 
+                        !_floorTiles.GetGridObject(currentTile.GridX + x, currentTile.GridZ + z).IsWalkable()){
+                        hasNeighbouringWall = true;
+                    }
+                }
+            }
+        }
+        /* here we remove the diagonal tiles if there are any neighbouring tile which is unwalkable */
+        if(hasNeighbouringWall){
+            for (int i = neighbourList.Count - 1; i >= 0 ; i--)
+            {
+                int xDiff = Mathf.Abs(currentTile.GridX - neighbourList[i].GridX);
+                int zDiff = Mathf.Abs(currentTile.GridZ - neighbourList[i].GridZ);
+                if(xDiff * zDiff != 0){
+                    neighbourList.Remove(neighbourList[i]);
+                }
+            }
+        }
+        return neighbourList;
+    }
+    /// <summary>
+    /// Returns a list of floortiles needed to get to the input tile
+    /// </summary>
+    /// <param name="endTile"></param>
+    /// <returns></returns>
+    private List<DungeonFloorTile> CalculatePath(DungeonFloorTile endTile){
+        List<DungeonFloorTile> path = new List<DungeonFloorTile>();
+        path.Add(endTile);
+        DungeonFloorTile currentTile = endTile;
+        while (currentTile.cameFromTile != null){
+            path.Add(currentTile.cameFromTile);
+            currentTile = currentTile.cameFromTile;
+        }
+        path.Reverse();
+        return path;
+    }
+    /// <summary>
+    /// Calculates the minimum distance between two given dungeon floor tiles counting straight step as 10 and diagonal as 14
+    /// </summary>
+    /// <param name="a">Start tile</param>
+    /// <param name="b">End tile</param>
+    /// <returns></returns>
+    private int CalculateDistance(DungeonFloorTile a, DungeonFloorTile b){
+        int xDistance = Mathf.Abs(a.GridX - b.GridX);
+        int zDistance = Mathf.Abs(a.GridZ - b.GridZ);
+        int remaining = Mathf.Abs(xDistance - zDistance);
+        return (MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining);
+    }
+
+    /// <summary>
+    /// Pick the tile with the lowest f cost from a given list of dungeon floor tiles
+    /// </summary>
+    /// <param name="tileList">The list of dungeon floor tiles to search</param>
+    /// <returns>The tile with the lowest f cost</returns>
+    private DungeonFloorTile GetLowestFCostTile(List<DungeonFloorTile> tileList){
+        DungeonFloorTile lowestFCostTile = tileList[0];
+        for (int i = 0; i < tileList.Count; i++){
+            if(tileList[i].FCost < lowestFCostTile.FCost){
+                lowestFCostTile = tileList[i];
+            }
+        }
+        return lowestFCostTile;
+        
+    }
+    /// <summary>
+    /// Initializes the floor gridtile values used for pathfinding
+    /// </summary>
+    private void ResetPathFindingData(){
+        for (int x = 0; x < _floorTiles.GetWitdth(); x++){
+            for (int z = 0; z < _floorTiles.GetHeight(); z++){
+                DungeonFloorTile tile = _floorTiles.GetGridObject(x, z);
+                tile.GCost = int.MaxValue;
+                tile.FCost = 0;
+                //tile.CalculateFCost();
+                tile.cameFromTile = null;
+            }
+        }
+    }
+
+#endregion
 
 
 
